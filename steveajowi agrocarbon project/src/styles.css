@@ -116,6 +116,28 @@ button {
     gap: 12px;
 }
 
+.mobile-pages {
+    display: none;
+}
+
+.mobile-page-pill {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 14px;
+    border-radius: 999px;
+    border: 1px solid rgba(189, 217, 176, 0.16);
+    background: rgba(255, 255, 255, 0.04);
+    color: var(--muted);
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.mobile-page-pill.active {
+    color: #10210f;
+    background: linear-gradient(135deg, var(--accent) 0%, #c8ef72 100%);
+}
+
 .topbar-user {
     display: flex;
     flex-wrap: wrap;
@@ -1272,6 +1294,55 @@ th {
     overflow-x: auto;
 }
 
+.measurement-cards {
+    display: none;
+    gap: 14px;
+}
+
+.measurement-card {
+    padding: 16px;
+    border-radius: 20px;
+    border: 1px solid var(--border);
+    background: var(--surface-strong);
+    display: grid;
+    gap: 14px;
+}
+
+.measurement-card-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.measurement-card-header span,
+.measurement-card-grid span {
+    display: block;
+    margin-bottom: 6px;
+    color: var(--muted);
+    font-size: 0.84rem;
+}
+
+.measurement-card-header strong,
+.measurement-card-grid strong {
+    display: block;
+    color: var(--text);
+    font-size: 0.96rem;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+}
+
+.measurement-card-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+}
+
+.measurement-card-footer {
+    display: flex;
+    justify-content: flex-start;
+}
+
 table {
     width: 100%;
     border-collapse: collapse;
@@ -1681,6 +1752,11 @@ th {
         grid-template-columns: 1fr;
     }
 
+    .login-card,
+    .role-summary-card {
+        grid-template-columns: 1fr;
+    }
+
     .hero-metrics,
     .highlight-grid,
     .snapshot-grid,
@@ -1700,8 +1776,76 @@ th {
 }
 
 @media (max-width: 720px) {
+    .mobile-pages {
+        position: sticky;
+        top: 0;
+        z-index: 5;
+        display: flex;
+        gap: 10px;
+        overflow-x: auto;
+        padding: 10px 0 14px;
+        margin: 0 0 16px;
+        background: linear-gradient(180deg, rgba(14, 21, 16, 0.96) 0%, rgba(14, 21, 16, 0.72) 100%);
+        backdrop-filter: blur(18px);
+    }
+
+    .mobile-pages::-webkit-scrollbar {
+        display: none;
+    }
+
+    .mobile-page-section {
+        display: none !important;
+    }
+
+    .app-shell[data-mobile-page="overview"] .page-overview.mobile-page-section,
+    .app-shell[data-mobile-page="farms"] .page-farms.mobile-page-section,
+    .app-shell[data-mobile-page="capture"] .page-capture.mobile-page-section,
+    .app-shell[data-mobile-page="review"] .page-review.mobile-page-section,
+    .app-shell[data-mobile-page="ledger"] .page-ledger.mobile-page-section {
+        display: block !important;
+    }
+
+    .app-shell[data-mobile-page="overview"] .workspace-rail.page-overview,
+    .app-shell[data-mobile-page="overview"] .hero-card.page-overview {
+        display: grid !important;
+    }
+
     .topbar {
         flex-direction: column;
+    }
+
+    .topbar-actions,
+    .topbar-user,
+    .user-chip,
+    .topbar-badge {
+        width: 100%;
+    }
+
+    .topbar-user {
+        justify-content: flex-start;
+    }
+
+    .user-chip,
+    .topbar-badge {
+        justify-content: flex-start;
+    }
+
+    .topbar-actions {
+        gap: 10px;
+    }
+
+    .app-shell {
+        padding: 20px 14px 40px;
+    }
+
+    .login-card {
+        width: 100%;
+        padding: 18px;
+        gap: 18px;
+    }
+
+    .login-role-grid {
+        grid-template-columns: 1fr;
     }
 
     .stats-grid,
@@ -1722,12 +1866,142 @@ th {
         grid-template-columns: 1fr;
     }
 
+    .farm-list,
+    .verification-list,
+    .token-list,
+    .highlight-grid,
+    .checklist-grid {
+        grid-template-columns: 1fr;
+        width: 100%;
+        min-width: 0;
+    }
+
+    .farm-card,
+    .farm-card-header,
+    .farm-status-block,
+    .farm-meta,
+    .chip-row,
+    .callout-grid,
+    .verification-item,
+    .pipeline-step,
+    .activity-card,
+    .activity-feed-header,
+    .measurement-health-card,
+    .snapshot-card,
+    .role-workspace-card,
+    .priority-card {
+        width: 100%;
+        min-width: 0;
+    }
+
+    .farm-card-header,
+    .farm-status-block,
+    .farm-meta,
+    .farm-meta dt,
+    .farm-meta dd,
+    .chip,
+    .status-pill,
+    .measurement-age,
+    .measurement-review-pill,
+    .activity-card time,
+    .farm-status-block span,
+    .farm-status-block p {
+        white-space: normal;
+        overflow-wrap: anywhere;
+        word-break: break-word;
+    }
+
+    .farm-card-header {
+        align-items: flex-start;
+    }
+
+    .farm-card-header .status-pill {
+        align-self: flex-start;
+    }
+
+    .farm-meta {
+        grid-template-columns: 1fr;
+    }
+
+    .chip-row,
+    .callout-grid {
+        flex-wrap: wrap;
+    }
+
+    .activity-list {
+        padding-left: 0;
+    }
+
+    .activity-list::before,
+    .activity-rail-dot {
+        display: none;
+    }
+
+    .activity-card time {
+        align-self: flex-start;
+    }
+
+    .activity-feed-header {
+        align-items: flex-start;
+    }
+
+    .activity-feed-header p {
+        white-space: normal;
+    }
+
+    .workspace-rail-card,
+    .stats-grid article {
+        width: 100%;
+        min-width: 0;
+    }
+
+    .table-wrap {
+        overflow-x: hidden;
+    }
+
+    .table-wrap {
+        display: none;
+    }
+
+    .measurement-cards {
+        display: grid;
+    }
+
+    .measurement-card-grid {
+        grid-template-columns: 1fr;
+    }
+
+    table {
+        table-layout: fixed;
+        width: 100%;
+    }
+
+    th,
+    td {
+        padding: 10px 8px;
+        white-space: normal;
+        overflow-wrap: anywhere;
+        word-break: break-word;
+    }
+
     .topbar-actions {
         align-items: flex-start;
     }
 
     .role-summary-card {
         grid-template-columns: 1fr;
+    }
+
+    .role-summary-card ul {
+        padding-left: 16px;
+    }
+
+    .hero-actions {
+        flex-direction: column;
+    }
+
+    .hero-actions button {
+        width: 100%;
     }
 
     .panel,
@@ -1746,6 +2020,33 @@ th {
     .verification-roadmap-header,
     .verification-roadmap-footer {
         flex-direction: column;
+    }
+
+    .token-card,
+    .verification-item,
+    .verification-roadmap-card {
+        align-items: stretch;
+    }
+
+    .token-meta {
+        text-align: left;
+    }
+
+    .token-meta span,
+    .token-meta strong {
+        display: block;
+        white-space: normal;
+        overflow-wrap: anywhere;
+        word-break: break-word;
+    }
+
+    .verification-mark {
+        min-width: 0;
+        width: 100%;
+    }
+
+    .verification-roadmap-footer {
+        align-items: flex-start;
     }
 
     .activity-trend {

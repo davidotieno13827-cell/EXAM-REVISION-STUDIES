@@ -1,4 +1,4 @@
-import { useEffect, useState, type FormEvent } from 'react';
+﻿import { useEffect, useState, type FormEvent } from 'react';
 import {
     complianceStandards,
     farmDevices,
@@ -70,6 +70,7 @@ const initialVerificationForm = {
 };
 
 type WorkspaceRole = 'farmer' | 'verifier' | 'admin';
+type MobilePage = 'overview' | 'farms' | 'capture' | 'review' | 'ledger';
 
 interface ActivityEntry {
     id: string;
@@ -228,6 +229,7 @@ function App() {
     const [tokenRecords, setTokenRecords] = useState(persistedState?.tokenBatches ?? tokenBatches);
     const [activityLog, setActivityLog] = useState<ActivityEntry[]>(persistedState?.activityLog ?? []);
     const [reviewedMeasurementIds, setReviewedMeasurementIds] = useState<string[]>(persistedState?.reviewedMeasurementIds ?? []);
+    const [mobilePage, setMobilePage] = useState<MobilePage>('overview');
     const [farmForm, setFarmForm] = useState(initialFarmForm);
     const [measurementForm, setMeasurementForm] = useState(initialMeasurementForm);
     const [verificationForm, setVerificationForm] = useState(initialVerificationForm);
@@ -352,6 +354,18 @@ function App() {
     const activeRole = authSession?.role ?? loginForm.role;
     const roleConfig = roleConfigurations[activeRole];
     const roleView = rolePermissions[activeRole];
+    const mobilePages = [
+        { id: 'overview' as const, label: 'Overview', visible: true },
+        { id: 'farms' as const, label: 'Farms', visible: roleView.showFarmRegistry },
+        { id: 'capture' as const, label: 'Capture', visible: roleView.showFarmForms || roleView.showMeasurementLog },
+        { id: 'review' as const, label: 'Review', visible: roleView.showVerificationForm },
+        { id: 'ledger' as const, label: 'Ledger', visible: roleView.showActivityTrail || roleView.showTokenLedger || roleView.showCompliance },
+    ].filter((page) => page.visible);
+
+    useEffect(() => {
+        setMobilePage('overview');
+    }, [activeRole]);
+
     const filteredFarmRecords = farmRecords.filter((farm) => {
         const searchTarget = `${farm.name} ${farm.owner} ${farm.location} ${farm.species.join(' ')}`.toLowerCase();
         return searchTarget.includes(farmQuery.trim().toLowerCase());
@@ -619,7 +633,7 @@ function App() {
         };
 
         setTokenRecords((currentRecords) => [nextToken, ...currentRecords]);
-        pushActivity('Token batch queued', `${nextToken.tokenId} for ${nextToken.farm} · ${reviewSummary}`);
+        pushActivity('Token batch queued', `${nextToken.tokenId} for ${nextToken.farm} ┬╖ ${reviewSummary}`);
     };
 
     const handleResetDemoData = () => {
@@ -647,7 +661,7 @@ function App() {
     };
 
     return (
-        <div className="app-shell">
+        <div className="app-shell" data-mobile-page={mobilePage}>
             <div className="ambient ambient-one" />
             <div className="ambient ambient-two" />
 
@@ -660,7 +674,7 @@ function App() {
                     <div className="topbar-user">
                         <div className="user-chip">
                             <span className="dot" />
-                            {authSession.displayName} · {roleConfig.label}
+                            {authSession.displayName} ┬╖ {roleConfig.label}
                         </div>
                         <button type="button" className="ghost-btn" onClick={handleLogout}>
                             Sign out
@@ -673,7 +687,20 @@ function App() {
                 </div>
             </header>
 
-            <section className="workspace-rail" aria-label="Workspace status">
+            <nav className="mobile-pages" aria-label="Mobile pages">
+                {mobilePages.map((page) => (
+                    <button
+                        key={page.id}
+                        type="button"
+                        className={`mobile-page-pill ${mobilePage === page.id ? 'active' : ''}`}
+                        onClick={() => setMobilePage(page.id)}
+                    >
+                        {page.label}
+                    </button>
+                ))}
+            </nav>
+
+            <section className="workspace-rail mobile-page-section page-overview" aria-label="Workspace status">
                 <article className="workspace-rail-card">
                     <span>Signed in user</span>
                     <strong>{authSession.displayName}</strong>
@@ -696,7 +723,7 @@ function App() {
                 </article>
             </section>
 
-            <section className="hero-card">
+            <section className="hero-card mobile-page-section page-overview">
                 <div className="hero-copy">
                     <p className="section-label">Project snapshot</p>
                     <h2>A single dashboard to track farms, measurements, verifier evidence, and ACT token issuance.</h2>
@@ -796,7 +823,7 @@ function App() {
                 </div>
             </section>
 
-            <section className="panel panel-full">
+            <section className="panel panel-full mobile-page-section page-overview">
                 <div className="panel-heading">
                     <div>
                         <p className="section-label">Report snapshot</p>
@@ -911,7 +938,7 @@ function App() {
 
             <main className="content-grid">
                 {roleView.showFarmRegistry ? (
-                    <section className="panel panel-large">
+                    <section className="panel panel-large mobile-page-section page-farms">
                         <div className="panel-heading">
                             <div>
                                 <p className="section-label">Farm registry</p>
@@ -1007,7 +1034,7 @@ function App() {
 
                                         <p className="farm-footer">
                                             Soil signal: <strong>{farm.soilCarbonChange}</strong>{' '}
-                                            <span>• Updated {farm.lastUpdated}</span>
+                                            <span>ΓÇó Updated {farm.lastUpdated}</span>
                                         </p>
                                     </article>
                                 );
@@ -1018,7 +1045,7 @@ function App() {
                     </section>
                 ) : null}
 
-                <aside className="panel side-panel">
+                <aside className="panel side-panel mobile-page-section page-overview">
                     <div className="panel-heading">
                         <div>
                             <p className="section-label">MRV pipeline</p>
@@ -1070,7 +1097,7 @@ function App() {
                 </aside>
 
                 {roleView.showFarmForms || roleView.showMeasurementLog || roleView.showVerificationForm ? (
-                    <section className="panel panel-large control-panel">
+                    <section className="panel panel-large control-panel mobile-page-section page-capture">
                         <div className="panel-heading">
                             <div>
                                 <p className="section-label">Control center</p>
@@ -1212,7 +1239,7 @@ function App() {
                 ) : null}
 
                 {roleView.showMeasurementLog ? (
-                    <section className="panel">
+                    <section className="panel mobile-page-section page-capture">
                         <div className="panel-heading">
                             <div>
                                 <p className="section-label">Measurements</p>
@@ -1238,46 +1265,6 @@ function App() {
                                                 />
                                             </div>
                                             <strong>{day.count}</strong>
-
-                                            <div className="measurement-health">
-                                                <article className="measurement-health-card">
-                                                    <span>Recent capture pulse</span>
-                                                    <strong>{measurementTrend.reduce((sum, day) => sum + day.count, 0)} records</strong>
-                                                    <div className="measurement-trend" aria-label="Measurement capture trend">
-                                                        {measurementTrend.map((day) => (
-                                                            <article className="measurement-trend-bar" key={day.label}>
-                                                                <span>{day.label}</span>
-                                                                <div className="measurement-trend-track">
-                                                                    <div
-                                                                        className="measurement-trend-fill"
-                                                                        style={{ height: `${Math.max(day.count * 20, 12)}px` }}
-                                                                    />
-                                                                </div>
-                                                                <strong>{day.count}</strong>
-                                                            </article>
-                                                        ))}
-                                                    </div>
-                                                </article>
-
-                                                <article className="measurement-health-card">
-                                                    <span>Newest evidence</span>
-                                                    <strong>{latestMeasurement ? measurementFreshness(latestMeasurement.capturedAt) : 'No records yet'}</strong>
-                                                    <p>Latest value in the log</p>
-                                                    <button
-                                                        type="button"
-                                                        className="ghost-btn measurement-review-btn"
-                                                        onClick={handleReviewLatestMeasurement}
-                                                        disabled={!latestMeasurement || reviewedMeasurementIds.includes(latestMeasurement.id)}
-                                                    >
-                                                        {latestMeasurement && reviewedMeasurementIds.includes(latestMeasurement.id)
-                                                            ? 'Latest reviewed'
-                                                            : 'Mark latest reviewed'}
-                                                    </button>
-                                                    <span className="measurement-review-count">
-                                                        {reviewedMeasurementCount} reviewed, {measurementRecords.length - reviewedMeasurementCount} pending
-                                                    </span>
-                                                </article>
-                                            </div>
                                         </article>
                                     ))}
                                 </div>
@@ -1342,7 +1329,7 @@ function App() {
                 ) : null}
 
                 {roleView.showVerificationForm ? (
-                    <section className="panel">
+                    <section className="panel mobile-page-section page-review">
                         <div className="panel-heading">
                             <div>
                                 <p className="section-label">Verification</p>
@@ -1388,7 +1375,7 @@ function App() {
                 ) : null}
 
                 {roleView.showVerificationForm ? (
-                    <section className="panel panel-large">
+                    <section className="panel panel-large mobile-page-section page-review">
                         <div className="panel-heading">
                             <div>
                                 <p className="section-label">Verification roadmap</p>
@@ -1422,7 +1409,7 @@ function App() {
                 ) : null}
 
                 {roleView.showVerificationForm ? (
-                    <section className="panel">
+                    <section className="panel mobile-page-section page-review">
                         <div className="panel-heading">
                             <div>
                                 <p className="section-label">Verification inputs</p>
@@ -1442,7 +1429,7 @@ function App() {
                 ) : null}
 
                 {roleView.showFarmForms ? (
-                    <section className="panel">
+                    <section className="panel mobile-page-section page-capture">
                         <div className="panel-heading">
                             <div>
                                 <p className="section-label">Farm gadgets</p>
@@ -1462,7 +1449,7 @@ function App() {
                 ) : null}
 
                 {roleView.showCompliance ? (
-                    <section className="panel panel-large">
+                    <section className="panel panel-large mobile-page-section page-ledger">
                         <div className="panel-heading">
                             <div>
                                 <p className="section-label">Compliance</p>
@@ -1482,7 +1469,7 @@ function App() {
                 ) : null}
 
                 {roleView.showActivityTrail ? (
-                    <section className="panel panel-large">
+                    <section className="panel panel-large mobile-page-section page-ledger">
                         <div className="panel-heading">
                             <div>
                                 <p className="section-label">Activity trail</p>
@@ -1545,7 +1532,7 @@ function App() {
                 ) : null}
 
                 {roleView.showTokenLedger ? (
-                    <section className="panel panel-large">
+                    <section className="panel panel-large mobile-page-section page-ledger">
                         <div className="panel-heading">
                             <div>
                                 <p className="section-label">ACT token ledger</p>
