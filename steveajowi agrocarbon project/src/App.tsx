@@ -72,6 +72,12 @@ const initialVerificationForm = {
 type WorkspaceRole = 'farmer' | 'verifier' | 'admin';
 type MobilePage = 'overview' | 'farms' | 'capture' | 'review' | 'ledger';
 
+const defaultMobilePageByRole: Record<WorkspaceRole, MobilePage> = {
+    farmer: 'capture',
+    verifier: 'review',
+    admin: 'ledger',
+};
+
 interface ActivityEntry {
     id: string;
     action: string;
@@ -272,6 +278,8 @@ function App() {
     const totalTrees = farmRecords.reduce((sum, farm) => sum + farm.treesPlanted, 0).toLocaleString();
     const verifiedFarms = farmRecords.filter((farm) => farm.status === 'verified').length;
     const mintedTokens = tokenRecords.filter((batch) => batch.state === 'Minted').length;
+    const pendingMintTokens = tokenRecords.filter((batch) => batch.state === 'Pending mint').length;
+    const listedTokens = tokenRecords.filter((batch) => batch.state === 'Listed').length;
     const pendingVerifications = verificationRecords.filter((item) => item.status === 'pending').length;
     const evidenceItems = verificationDataRequired.length + farmDevices.length;
     const readinessPercentage = farmRecords.length > 0 ? Math.round((verifiedFarms / farmRecords.length) * 100) : 0;
@@ -355,15 +363,16 @@ function App() {
     const roleConfig = roleConfigurations[activeRole];
     const roleView = rolePermissions[activeRole];
     const mobilePages = [
-        { id: 'overview' as const, label: 'Overview', visible: true },
-        { id: 'farms' as const, label: 'Farms', visible: roleView.showFarmRegistry },
-        { id: 'capture' as const, label: 'Capture', visible: roleView.showFarmForms || roleView.showMeasurementLog },
-        { id: 'review' as const, label: 'Review', visible: roleView.showVerificationForm },
-        { id: 'ledger' as const, label: 'Ledger', visible: roleView.showActivityTrail || roleView.showTokenLedger || roleView.showCompliance },
+        { id: 'overview' as const, label: 'Overview', detail: 'Key status and workflow summary', visible: true },
+        { id: 'farms' as const, label: 'Farms', detail: 'Registry and site readiness', visible: roleView.showFarmRegistry },
+        { id: 'capture' as const, label: 'Capture', detail: 'Add farms and log measurements', visible: roleView.showFarmForms || roleView.showMeasurementLog },
+        { id: 'review' as const, label: 'Review', detail: 'Verification queue and checklist', visible: roleView.showVerificationForm },
+        { id: 'ledger' as const, label: 'Ledger', detail: 'Compliance, activity, and token records', visible: roleView.showActivityTrail || roleView.showTokenLedger || roleView.showCompliance },
     ].filter((page) => page.visible);
+    const activeMobilePage = mobilePages.find((page) => page.id === mobilePage) ?? mobilePages[0];
 
     useEffect(() => {
-        setMobilePage('overview');
+        setMobilePage(defaultMobilePageByRole[activeRole]);
     }, [activeRole]);
 
     const filteredFarmRecords = farmRecords.filter((farm) => {
@@ -633,7 +642,8 @@ function App() {
         };
 
         setTokenRecords((currentRecords) => [nextToken, ...currentRecords]);
-        pushActivity('Token batch queued', `${nextToken.tokenId} for ${nextToken.farm} ┬╖ ${reviewSummary}`);
+        pushActivity('Token batch queued', `${nextToken.tokenId} for ${nextToken.farm} · ${reviewSummary}`);
+        setMobilePage('ledger');
     };
 
     const handleResetDemoData = () => {
@@ -674,7 +684,7 @@ function App() {
                     <div className="topbar-user">
                         <div className="user-chip">
                             <span className="dot" />
-                            {authSession.displayName} ┬╖ {roleConfig.label}
+                            {authSession.displayName} · {roleConfig.label}
                         </div>
                         <button type="button" className="ghost-btn" onClick={handleLogout}>
                             Sign out
@@ -695,10 +705,19 @@ function App() {
                         className={`mobile-page-pill ${mobilePage === page.id ? 'active' : ''}`}
                         onClick={() => setMobilePage(page.id)}
                     >
-                        {page.label}
+                        <span>{page.label}</span>
+                        <small>{page.detail}</small>
                     </button>
                 ))}
             </nav>
+
+            <section className="mobile-page-banner" aria-label="Current mobile page">
+                <div>
+                    <p className="section-label">{activeMobilePage.label}</p>
+                    <h2>{activeMobilePage.detail}</h2>
+                </div>
+                <span className="mobile-page-badge">{activeMobilePage.label}</span>
+            </section>
 
             <section className="workspace-rail mobile-page-section page-overview" aria-label="Workspace status">
                 <article className="workspace-rail-card">
@@ -744,8 +763,12 @@ function App() {
                         </ul>
                     </div>
                     <div className="hero-actions">
-                        <button type="button" className="primary-btn">Open farm registry</button>
-                        <button type="button" className="secondary-btn">Review verification queue</button>
+                        <button type="button" className="primary-btn" onClick={() => setMobilePage('farms')}>
+                            Open farm registry
+                        </button>
+                        <button type="button" className="secondary-btn" onClick={() => setMobilePage('review')}>
+                            Review verification queue
+                        </button>
                         <button type="button" className="ghost-btn" onClick={handleDownloadReport}>
                             Download MRV bundle
                         </button>
@@ -823,7 +846,7 @@ function App() {
                 </div>
             </section>
 
-            <section className="panel panel-full mobile-page-section page-overview">
+            <section className="panel panel-full mobile-page-section page-ledger">
                 <div className="panel-heading">
                     <div>
                         <p className="section-label">Report snapshot</p>
@@ -1034,7 +1057,7 @@ function App() {
 
                                         <p className="farm-footer">
                                             Soil signal: <strong>{farm.soilCarbonChange}</strong>{' '}
-                                            <span>ΓÇó Updated {farm.lastUpdated}</span>
+                                            <span>• Updated {farm.lastUpdated}</span>
                                         </p>
                                     </article>
                                 );
@@ -1045,7 +1068,7 @@ function App() {
                     </section>
                 ) : null}
 
-                <aside className="panel side-panel mobile-page-section page-overview">
+                <aside className="panel side-panel mobile-page-section page-ledger">
                     <div className="panel-heading">
                         <div>
                             <p className="section-label">MRV pipeline</p>
@@ -1541,16 +1564,37 @@ function App() {
                             <span className="panel-note">{mintedTokens} minted batches</span>
                         </div>
 
+                        <div className="ledger-summary-grid">
+                            <article className="ledger-summary-card">
+                                <span>Minted</span>
+                                <strong>{mintedTokens}</strong>
+                                <p>Ready for settlement or reporting.</p>
+                            </article>
+                            <article className="ledger-summary-card">
+                                <span>Pending mint</span>
+                                <strong>{pendingMintTokens}</strong>
+                                <p>Queued for review or registry sync.</p>
+                            </article>
+                            <article className="ledger-summary-card">
+                                <span>Listed</span>
+                                <strong>{listedTokens}</strong>
+                                <p>Published and visible to the market flow.</p>
+                            </article>
+                        </div>
+
                         <div className="token-list">
                             {tokenRecords.map((batch) => (
                                 <article className="token-card" key={batch.tokenId}>
-                                    <div>
+                                    <div className="token-card-main">
                                         <p>{batch.farm}</p>
                                         <h4>{batch.credits}</h4>
+                                        <span className="token-card-note">Carbon credits prepared for token lifecycle handling.</span>
                                     </div>
                                     <div className="token-meta">
                                         <span>{batch.tokenId}</span>
-                                        <strong>{batch.state}</strong>
+                                        <strong className={`token-state-pill token-state-${batch.state.toLowerCase().replace(/\s+/g, '-')}`}>
+                                            {batch.state}
+                                        </strong>
                                     </div>
                                 </article>
                             ))}

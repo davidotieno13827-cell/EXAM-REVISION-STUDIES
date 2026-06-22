@@ -1,6 +1,6 @@
 :root {
     color-scheme: light;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: 'Aptos', 'Trebuchet MS', 'Segoe UI', sans-serif;
     --bg: #0e1510;
     --surface: rgba(17, 26, 19, 0.82);
     --surface-strong: rgba(21, 34, 25, 0.96);
@@ -21,11 +21,15 @@ body {
     margin: 0;
     min-width: 320px;
     min-height: 100vh;
+    line-height: 1.5;
     background:
-        radial-gradient(circle at top left, rgba(154, 209, 95, 0.16), transparent 32%),
-        radial-gradient(circle at top right, rgba(200, 161, 90, 0.12), transparent 28%),
-        linear-gradient(145deg, #101911 0%, #111c14 40%, #0b120d 100%);
+        radial-gradient(circle at 18% 12%, rgba(154, 209, 95, 0.2), transparent 24%),
+        radial-gradient(circle at 82% 0%, rgba(200, 161, 90, 0.18), transparent 22%),
+        radial-gradient(circle at 50% 110%, rgba(85, 160, 211, 0.1), transparent 32%),
+        linear-gradient(145deg, #101911 0%, #111c14 42%, #0b120d 100%);
     color: var(--text);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
 }
 
 button,
@@ -63,6 +67,24 @@ textarea:focus {
 button {
     border: 0;
     cursor: pointer;
+    transition:
+        transform 160ms ease,
+        box-shadow 160ms ease,
+        border-color 160ms ease,
+        background 160ms ease,
+        color 160ms ease;
+}
+
+button:hover {
+    transform: translateY(-1px);
+}
+
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+    outline: 2px solid rgba(220, 231, 118, 0.78);
+    outline-offset: 2px;
 }
 
 #root {
@@ -75,6 +97,24 @@ button {
     margin: 0 auto;
     padding: 32px clamp(20px, 4vw, 40px) 56px;
     overflow: hidden;
+    isolation: isolate;
+}
+
+.app-shell::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.03), transparent 18%),
+        radial-gradient(circle at top, rgba(255, 255, 255, 0.03), transparent 28%);
+    mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.7), transparent 96%);
+    pointer-events: none;
+    z-index: 0;
+}
+
+.app-shell>* {
+    position: relative;
+    z-index: 1;
 }
 
 .ambient {
@@ -83,6 +123,39 @@ button {
     filter: blur(30px);
     opacity: 0.65;
     pointer-events: none;
+}
+
+.token-list {
+    gap: 14px;
+}
+
+.token-card {
+    position: relative;
+    overflow: hidden;
+    border-radius: 24px;
+    background:
+        linear-gradient(135deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0.02)),
+        var(--surface-strong);
+}
+
+.token-card::before {
+    content: '';
+    position: absolute;
+    inset: 0 auto 0 0;
+    width: 4px;
+    background: linear-gradient(180deg, rgba(154, 209, 95, 0.9), rgba(154, 209, 95, 0.35));
+}
+
+.token-card-main h4 {
+    margin: 0;
+}
+
+.token-card-main .token-card-note {
+    max-width: 30ch;
+}
+
+.token-meta strong {
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.04);
 }
 
 .ambient-one {
@@ -122,20 +195,45 @@ button {
 
 .mobile-page-pill {
     display: inline-flex;
-    align-items: center;
-    justify-content: center;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 3px;
     padding: 10px 14px;
-    border-radius: 999px;
+    border-radius: 18px;
     border: 1px solid rgba(189, 217, 176, 0.16);
     background: rgba(255, 255, 255, 0.04);
     color: var(--muted);
     font-weight: 700;
+    text-align: left;
+    min-width: 124px;
     white-space: nowrap;
+}
+
+.mobile-page-pill:hover {
+    border-color: rgba(154, 209, 95, 0.34);
+    background: rgba(255, 255, 255, 0.06);
+}
+
+.mobile-page-pill span {
+    font-size: 0.94rem;
+}
+
+.mobile-page-pill small {
+    color: rgba(181, 200, 177, 0.78);
+    font-size: 0.72rem;
+    font-weight: 600;
+    line-height: 1.2;
+    white-space: normal;
 }
 
 .mobile-page-pill.active {
     color: #10210f;
     background: linear-gradient(135deg, var(--accent) 0%, #c8ef72 100%);
+    box-shadow: 0 12px 24px rgba(154, 209, 95, 0.18);
+}
+
+.mobile-page-banner {
+    display: none;
 }
 
 .topbar-user {
@@ -156,6 +254,13 @@ button {
     background: rgba(255, 255, 255, 0.05);
     color: var(--text);
     font-weight: 700;
+}
+
+.user-chip,
+.topbar-badge,
+.mobile-page-pill,
+.role-pill {
+    backdrop-filter: blur(14px);
 }
 
 .role-switcher {
@@ -227,6 +332,24 @@ h1 {
     border-radius: 28px;
     box-shadow: var(--shadow);
     backdrop-filter: blur(18px);
+}
+
+.hero-card {
+    position: relative;
+    overflow: hidden;
+}
+
+.hero-card::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(154, 209, 95, 0.08), transparent 36%, rgba(85, 160, 211, 0.04));
+    pointer-events: none;
+}
+
+.hero-card>* {
+    position: relative;
+    z-index: 1;
 }
 
 .workspace-rail {
@@ -1412,8 +1535,87 @@ th {
     align-items: center;
 }
 
+.ledger-summary-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 14px;
+    margin-bottom: 16px;
+}
+
+.ledger-summary-card {
+    padding: 16px 18px;
+    border-radius: 20px;
+    border: 1px solid rgba(189, 217, 176, 0.14);
+    background: linear-gradient(135deg, rgba(154, 209, 95, 0.08), rgba(255, 255, 255, 0.03));
+}
+
+.ledger-summary-card span {
+    display: block;
+    margin-bottom: 8px;
+    color: var(--muted);
+    font-size: 0.86rem;
+}
+
+.ledger-summary-card strong {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 1.45rem;
+}
+
+.ledger-summary-card p {
+    margin: 0;
+    color: var(--muted);
+    font-size: 0.92rem;
+}
+
+.token-card-main {
+    display: grid;
+    gap: 8px;
+}
+
+.token-card-main p {
+    margin: 0;
+    color: var(--muted);
+    font-size: 0.92rem;
+}
+
+.token-card-note {
+    color: var(--muted);
+    font-size: 0.84rem;
+}
+
 .token-meta {
     text-align: right;
+}
+
+.token-state-pill {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    padding: 8px 12px;
+    border-radius: 999px;
+    border: 1px solid transparent;
+    font-size: 0.84rem;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.token-state-minted {
+    color: #cdf5ff;
+    background: rgba(85, 160, 211, 0.14);
+    border-color: rgba(85, 160, 211, 0.24);
+}
+
+.token-state-pending-mint {
+    color: #f3e5b4;
+    background: rgba(200, 161, 90, 0.14);
+    border-color: rgba(200, 161, 90, 0.24);
+}
+
+.token-state-listed {
+    color: #dff8d0;
+    background: rgba(154, 209, 95, 0.14);
+    border-color: rgba(154, 209, 95, 0.24);
 }
 
 .verification-roadmap {
@@ -1778,19 +1980,62 @@ th {
 @media (max-width: 720px) {
     .mobile-pages {
         position: sticky;
-        top: 0;
-        z-index: 5;
-        display: flex;
+        bottom: 12px;
+        z-index: 8;
+        display: grid;
+        grid-auto-flow: column;
+        grid-auto-columns: minmax(128px, 1fr);
         gap: 10px;
         overflow-x: auto;
-        padding: 10px 0 14px;
-        margin: 0 0 16px;
-        background: linear-gradient(180deg, rgba(14, 21, 16, 0.96) 0%, rgba(14, 21, 16, 0.72) 100%);
+        padding: 12px;
+        margin: 18px 0 0;
+        background: rgba(10, 16, 12, 0.9);
+        border: 1px solid rgba(189, 217, 176, 0.14);
+        border-radius: 22px;
         backdrop-filter: blur(18px);
+        box-shadow: 0 14px 42px rgba(0, 0, 0, 0.28);
+        scroll-snap-type: x proximity;
     }
 
     .mobile-pages::-webkit-scrollbar {
         display: none;
+    }
+
+    .mobile-pages button {
+        flex: 0 0 auto;
+        scroll-snap-align: start;
+    }
+
+    .mobile-page-banner {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        gap: 16px;
+        margin: 14px 0 16px;
+        padding: 18px;
+        border-radius: 24px;
+        border: 1px solid rgba(189, 217, 176, 0.12);
+        background: linear-gradient(135deg, rgba(154, 209, 95, 0.12), rgba(255, 255, 255, 0.04));
+    }
+
+    .mobile-page-banner h2 {
+        margin: 0;
+        font-size: 1.12rem;
+        line-height: 1.3;
+        max-width: 18ch;
+    }
+
+    .mobile-page-badge {
+        flex: 0 0 auto;
+        padding: 8px 12px;
+        border-radius: 999px;
+        background: rgba(154, 209, 95, 0.12);
+        color: var(--accent-strong);
+        font-size: 0.82rem;
+        font-weight: 700;
+        border: 1px solid rgba(154, 209, 95, 0.22);
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
     }
 
     .mobile-page-section {
@@ -1808,6 +2053,10 @@ th {
     .app-shell[data-mobile-page="overview"] .workspace-rail.page-overview,
     .app-shell[data-mobile-page="overview"] .hero-card.page-overview {
         display: grid !important;
+    }
+
+    .app-shell {
+        padding-bottom: 116px;
     }
 
     .topbar {
@@ -2028,8 +2277,15 @@ th {
         align-items: stretch;
     }
 
+    .ledger-summary-grid {
+        grid-template-columns: 1fr;
+    }
+
     .token-meta {
         text-align: left;
+        display: grid;
+        gap: 10px;
+        justify-items: start;
     }
 
     .token-meta span,
