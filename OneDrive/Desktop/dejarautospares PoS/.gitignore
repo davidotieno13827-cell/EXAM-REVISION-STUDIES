@@ -1,0 +1,10 @@
+# Environment variables containing secrets
+.env
+
+# SQLite database file and instances
+instance/
+
+# Python cache and environment folders
+__pycache__/
+*.pyc
+.venv/

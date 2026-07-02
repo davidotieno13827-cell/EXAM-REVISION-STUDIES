@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block title %}Import Products - Dejar Auto Spares{% endblock %}
+
+{% block content %}
+    <div class="card shadow-sm mx-auto" style="max-width: 700px;">
+        <div class="card-body">
+            <h2 class="card-title mb-4">Import Products</h2>
+            <p class="text-muted mb-4">Upload a CSV file to add new inventory or update existing items.</p>
+            <form method="POST" enctype="multipart/form-data">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <div class="mb-3">
+                    <label for="file" class="form-label">CSV File</label>
+                    <input class="form-control" type="file" id="file" name="file" accept=".csv" required>
+                </div>
+                <div class="mb-3">
+                    <p class="mb-1">Expected columns:</p>
+                    <ul>
+                        <li><strong>sku</strong> or <strong>code</strong> (optional)</li>
+                        <li><strong>name</strong> or <strong>product_name</strong></li>
+                        <li><strong>brand</strong> or <strong>make</strong></li>
+                        <li><strong>price</strong> or <strong>unit_price</strong></li>
+                        <li><strong>stock</strong>, <strong>quantity</strong>, or <strong>stock_quantity</strong></li>
+                    </ul>
+                </div>
+                <button type="submit" class="btn btn-primary">Import CSV</button>
+                <a href="{{ url_for('pos.index') }}" class="btn btn-link">Back to Inventory</a>
+            </form>
+        </div>
+    </div>
+{% endblock %}

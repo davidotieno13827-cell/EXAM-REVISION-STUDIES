@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% block title %}Add Product - Dejar Auto Spares{% endblock %}
+
+{% block content %}
+    <div class="card shadow-sm" style="max-width: 650px;">
+        <div class="card-body">
+            <h2 class="card-title mb-4">Add New Product</h2>
+            <p class="text-muted mb-4">Enter product details below, then review the current lubricants price list for reference.</p>
+            <form method="POST" class="row g-3">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <div class="col-12">
+                    <label class="form-label">SKU</label>
+                    <input type="text" name="sku" class="form-control" placeholder="SKU or product code">
+                </div>
+                <div class="col-12">
+                    <label class="form-label">Product Name</label>
+                    <input type="text" name="name" class="form-control" placeholder="Product Name" required>
+                </div>
+                <div class="col-12">
+                    <label class="form-label">Brand</label>
+                    <input type="text" name="brand" class="form-control" placeholder="Brand" required>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Price</label>
+                    <input type="number" step="0.01" name="price" class="form-control" placeholder="Price" required>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Stock</label>
+                    <input type="number" name="stock" class="form-control" placeholder="Initial Stock" required>
+                </div>
+                <div class="col-12">
+                    <button type="submit" class="btn btn-primary">Save Product</button>
+                    <a href="{{ url_for('pos.index') }}" class="btn btn-link">Back to Inventory</a>
+                </div>
+            </form>
+
+        </div>
+    </div>
+{% endblock %}
