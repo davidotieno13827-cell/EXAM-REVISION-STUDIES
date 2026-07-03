@@ -1,0 +1,54 @@
+/* Update Logo Styles for Slogan */
+.logo {
+    display: flex;
+    flex-direction: column;
+}
+
+.logo h1 {
+    margin: 0;
+    color: #ffffff;
+    font-size: 28px;
+    font-weight: 900;
+    letter-spacing: 1px;
+}
+
+.slogan {
+    color: #e50914;
+    /* Red accent color */
+    font-size: 11px;
+    text-transform: uppercase;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    margin-top: 2px;
+}
+
+/* Footer Enhancements */
+.main-footer {
+    background-color: #0b0b0b;
+    padding: 40px 5%;
+    text-align: center;
+    border-top: 1px solid #222;
+    margin-top: 50px;
+}
+
+.footer-info h4 {
+    margin-bottom: 10px;
+    color: #ffffff;
+}
+
+.footer-info p {
+    color: #888888;
+    font-size: 14px;
+    margin: 5px 0;
+}
+
+.footer-divider {
+    border: 0;
+    border-top: 1px solid #222;
+    margin: 20px 0;
+}
+
+.copyright {
+    color: #555555;
+    font-size: 12px;
+}

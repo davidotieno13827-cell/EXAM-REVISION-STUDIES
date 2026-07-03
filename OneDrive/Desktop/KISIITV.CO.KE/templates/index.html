@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+    <!-- Hero / Main Live Broadcast Banner -->
+    <section class="hero-section" style="padding: 80px 5%; background: linear-gradient(180deg, #1a1a1a 0%, #121212 100%); text-align: center;">
+        <div style="display: inline-block; background-color: #e50914; color: #fff; padding: 5px 10px; font-weight: bold; border-radius: 3px; font-size: 12px; margin-bottom: 15px; text-transform: uppercase; letter-spacing: 1px;">
+            ● Live Stream
+        </div>
+        <h2 style="font-size: 42px; margin: 0 0 15px 0; font-weight: 900;">AYA' ATEKIRE CHINSA IBERE</h2>
+        <p style="font-size: 16px; color: #aaaaaa; max-width: 600px; margin: 0 auto 30px auto;">Broadcasting live from Kisii Town to the world. Stay connected with the latest local events, discussions, and updates.</p>
+        <a href="#" style="background-color: #ffffff; color: #000000; padding: 12px 30px; text-decoration: none; font-weight: bold; border-radius: 4px; text-transform: uppercase; font-size: 14px; transition: 0.3s;">Watch Live Player</a>
+    </section>
+
+    <!-- News & Features Grid Setup -->
+    <section class="content-grid-section" style="padding: 40px 5%;">
+        <h3 style="font-size: 22px; border-left: 4px solid #e50914; padding-left: 10px; margin-bottom: 25px; text-transform: uppercase;">Latest Episodes</h3>
+        
+        <div style="display: flex; gap: 25px; flex-wrap: wrap;">
+            {% for episode in latest_episodes %}
+            <!-- Dynamic Video Card -->
+            <div style="flex: 1; min-width: 280px; max-width: 30%; background-color: #1c1c1c; border-radius: 6px; overflow: hidden; border: 1px solid #252525;">
+                
+                <!-- Clickable Thumbnail Container -->
+                <div style="background-color: #333; height: 180px; display: flex; align-items: center; justify-content: center; color: #666; position: relative;">
+                    <a href="{% url 'watch_episode' episode.id %}" style="width: 100%; height: 100%; display: block;">
+                        {% if episode.show.cover_image %}
+                            <img src="{{ episode.show.cover_image.url }}" alt="{{ episode.show.title }}" style="width: 100%; height: 100%; object-fit: cover;">
+                        {% else %}
+                            <span style="display: flex; align-items: center; justify-content: center; height: 100%; color: #ffffff; font-weight: bold; font-size: 14px; text-transform: uppercase; background-color: #2a2a2a; width: 100%;">Click to Watch</span>
+                        {% endif %}
+                    </a>
+                </div>
+                
+                <!-- Card Details Section -->
+                <div style="padding: 15px;">
+                    <span style="color: #e50914; font-size: 12px; font-weight: bold; text-transform: uppercase;">{{ episode.show.category.name }}</span>
+                    
+                    <!-- Clickable Title Text -->
+                    <h4 style="margin: 5px 0 10px 0; font-size: 16px; line-height: 1.4;">
+                        <a href="{% url 'watch_episode' episode.id %}" style="color: #ffffff; text-decoration: none; transition: color 0.2s;">
+                            {{ episode.show.title }}: {{ episode.title }}
+                        </a>
+                    </h4>
+                    
+                    <p style="color: #777; font-size: 12px; margin: 0;">{{ episode.upload_date|timesince }} ago</p>
+                </div>
+                
+            </div>
+            {% empty %}
+            <!-- Fallback message if the database table is empty -->
+            <p style="color: #aaaaaa; font-size: 14px; padding: 20px 0;">No broadcasts or episodes uploaded yet. Log into the Django Admin panel to populate content.</p>
+            {% endfor %}
+        </div>
+    </section>
+{% endblock content %}

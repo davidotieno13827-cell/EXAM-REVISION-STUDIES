@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<section class="video-player-section" style="padding: 40px 5%; background-color: #0b0b0b; min-height: 80vh;">
+    <div style="max-width: 1000px; margin: 0 auto;">
+        
+        <!-- Standard HTML5 Video Player -->
+        <div style="width: 100%; background-color: #000; border-radius: 8px; overflow: hidden; border: 1px solid #333; box-shadow: 0 4px 15px rgba(0,0,0,0.5);">
+            <video width="100%" controls autoplay style="display: block;">
+                <source src="{{ episode.video_file.url }}" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+        </div>
+
+        <!-- Video Details -->
+        <div style="margin-top: 25px;">
+            <span style="color: #e50914; font-size: 14px; font-weight: bold; text-transform: uppercase; letter-spacing: 1px;">{{ episode.show.category.name }}</span>
+            <h2 style="margin: 10px 0; font-size: 32px; font-weight: 900; color: #ffffff;">{{ episode.show.title }}: {{ episode.title }}</h2>
+            <p style="color: #888; font-size: 14px; margin-bottom: 20px;">Uploaded {{ episode.upload_date|timesince }} ago</p>
+            
+            <hr style="border: 0; border-top: 1px solid #222; margin: 25px 0;">
+            
+            <h3 style="font-size: 20px; margin-bottom: 15px; color: #ffffff;">About this Show</h3>
+            <p style="color: #cccccc; line-height: 1.6; font-size: 15px;">{{ episode.show.description }}</p>
+        </div>
+        
+    </div>
+</section>
+{% endblock content %}

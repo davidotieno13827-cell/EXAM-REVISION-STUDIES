@@ -1,0 +1,60 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kisii TV | Amandegere Y'omogusii</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700;900&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <!-- Top Navigation Bar -->
+    <header class="main-header">
+        <div class="header-container">
+            <div class="logo">
+                <a href="/">
+                    <h1>KISII TV</h1>
+                    <small class="slogan">Amandegere Y'omogusii</small>
+                </a>
+            </div>
+
+            <nav class="nav-menu">
+                <ul>
+                    <li><a href="/">Home</a></li>
+                    <li><a href="#">Live TV</a></li>
+                    <li><a href="#">Chinsangane (News)</a></li>
+                    <li><a href="#">Siasa (Politics)</a></li>
+                    <li><a href="#">Extra / Nyamakoro</a></li>
+                    <li><a href="#">Sports</a></li>
+                </ul>
+            </nav>
+
+            <div class="nav-actions">
+                <span class="search-icon">🔍 Search</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Dynamic Content Area -->
+    <main class="content-area">
+        {% block content %}
+        {% endblock content %}
+    </main>
+
+    <!-- Global Footer with Real Broadcast & Contact Details -->
+    <footer class="main-footer">
+        <div class="footer-container">
+            <div class="footer-info">
+                <h4>Kisii TV - Omogusii's Number 1 National Broadcaster</h4>
+                <p>Available on: Zuku Channel 33 | GOtv Channel 810 | StarTimes Channel 619</p>
+                <p>Call/WhatsApp/M-Pesa: +254 726 547 363 | Email: kisiitelevision@gmail.com</p>
+            </div>
+            <hr class="footer-divider">
+            <p class="copyright">&copy; 2026 Kisii TV. All rights reserved.</p>
+        </div>
+    </footer>
+
+</body>
+</html>
