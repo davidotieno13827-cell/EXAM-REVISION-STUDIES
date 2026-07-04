@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% block content %}
+<section class="hero-section" style="padding: 70px 5% !important; min-height: 300px; display: flex; flex-direction: column; justify-content: center;">
+    <h2 style="margin-bottom: 12px;">Welcome, {{ user.username }}</h2>
+    <p style="color: #cccccc; margin: 0;">Your personal Kisii TV dashboard for saved and liked content.</p>
+</section>
+
+<section class="content-grid-section">
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+        <div style="background: #1c1c1c; padding: 24px; border-radius: 10px; border: 1px solid #2a2a2a;">
+            <h3 style="margin-top: 0;">Saved Videos</h3>
+            {% if saved_videos %}
+            <div style="display: flex; flex-direction: column; gap: 12px;">
+                {% for video in saved_videos %}
+                <a href="{% url 'video_detail' video.slug %}" style="color: #fff; text-decoration: none; padding: 10px 12px; background: #242424; border-radius: 6px;">{{ video.title }}</a>
+                {% endfor %}
+            </div>
+            {% else %}
+            <p style="color: #888;">No saved videos yet.</p>
+            {% endif %}
+        </div>
+        <div style="background: #1c1c1c; padding: 24px; border-radius: 10px; border: 1px solid #2a2a2a;">
+            <h3 style="margin-top: 0;">Liked Videos</h3>
+            {% if liked_videos %}
+            <div style="display: flex; flex-direction: column; gap: 12px;">
+                {% for video in liked_videos %}
+                <a href="{% url 'video_detail' video.slug %}" style="color: #fff; text-decoration: none; padding: 10px 12px; background: #242424; border-radius: 6px;">{{ video.title }}</a>
+                {% endfor %}
+            </div>
+            {% else %}
+            <p style="color: #888;">No liked videos yet.</p>
+            {% endif %}
+        </div>
+    </div>
+</section>
+{% endblock %}

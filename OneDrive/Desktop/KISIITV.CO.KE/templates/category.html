@@ -1,0 +1,100 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+    <!-- Category Header -->
+    <section class="hero-section" style="padding: 60px 5% !important; min-height: 300px; display: flex; flex-direction: column; justify-content: center;">
+        <h2 style="margin: 0; margin-bottom: 15px;">{{ category.name }}</h2>
+        {% if category.description %}
+            <p style="font-size: 18px; color: #cccccc; margin: 0;">{{ category.description }}</p>
+        {% else %}
+            <p style="font-size: 18px; color: #cccccc; margin: 0;">Browse all content in the {{ category.name }} category</p>
+        {% endif %}
+    </section>
+
+    <!-- Videos Grid -->
+    <section class="content-grid-section">
+        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 25px;">
+            {% for video in videos %}
+            <div class="video-card">
+                <div class="video-thumbnail">
+                    {% if video.thumbnail %}
+                        <img src="{{ video.thumbnail.url }}" alt="{{ video.title }}">
+                    {% else %}
+                        <div style="background: linear-gradient(135deg, #2a4a8a 0%, #1a2a5a 100%); width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; font-size: 48px;">
+                            <i class="fas fa-play-circle"></i>
+                        </div>
+                    {% endif %}
+                    <a href="{% url 'video_detail' video.slug %}" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; background: rgba(0,0,0,0.5); opacity: 0; transition: opacity 0.3s; border: none;">
+                        <i class="fas fa-play-circle" style="font-size: 48px; color: #fff;"></i>
+                    </a>
+                </div>
+                
+                <div class="video-card-details">
+                    <span class="video-category">{{ video.category.name }}</span>
+                    <h4><a href="{% url 'video_detail' video.slug %}" style="color: #fff; text-decoration: none;">{{ video.title }}</a></h4>
+                    <p class="video-date"><i class="fas fa-calendar"></i> {{ video.published_date|date:"M d, Y" }}</p>
+                    <p style="font-size: 12px; color: #888; margin-top: 8px;">
+                        <i class="fas fa-eye"></i> {{ video.views }} views
+                        {% if video.is_live %}
+                            <span style="background: #e50914; color: #fff; padding: 2px 8px; border-radius: 3px; margin-left: 8px;">LIVE</span>
+                        {% endif %}
+                    </p>
+                </div>
+            </div>
+            {% empty %}
+            <div style="grid-column: 1/-1; text-align: center; padding: 60px 20px;">
+                <i class="fas fa-inbox" style="font-size: 48px; color: #888; margin-bottom: 20px; display: block;"></i>
+                <h3 style="color: #ccc; margin-bottom: 10px;">No videos in this category</h3>
+                <p style="color: #888; margin-bottom: 30px;">Check back soon for new content</p>
+                <a href="/" style="background: linear-gradient(135deg, #e50914 0%, #cc000d 100%); color: #fff; padding: 12px 30px; text-decoration: none; border-radius: 6px; display: inline-block;">
+                    <i class="fas fa-home"></i> Back to Home
+                </a>
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+
+    <section class="content-grid-section">
+        <h3 style="text-align: center; border: none; padding: 0; margin-bottom: 15px;">
+            <i class="fas fa-random" style="margin-right: 12px; color: #e50914;"></i> You May Also Like
+        </h3>
+        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 20px;">
+            {% for video in recommended_videos %}
+            <a href="{% url 'video_detail' video.slug %}" style="text-decoration: none; color: inherit; background: #1c1c1c; border-radius: 8px; overflow: hidden; border: 1px solid #252525;">
+                <div style="height: 120px; background: linear-gradient(135deg, #2a4a8a 0%, #1a2a5a 100%); display: flex; align-items: center; justify-content: center; font-size: 32px;">
+                    <i class="fas fa-play-circle"></i>
+                </div>
+                <div style="padding: 12px;">
+                    <div style="font-size: 12px; color: #e50914; text-transform: uppercase; margin-bottom: 6px;">{{ video.category.name }}</div>
+                    <div style="font-weight: 600; color: #fff;">{{ video.title }}</div>
+                </div>
+            </a>
+            {% empty %}
+            <p style="grid-column: 1/-1; text-align: center; color: #888;">No recommendations yet.</p>
+            {% endfor %}
+        </div>
+    </section>
+
+    <!-- Related Categories Section -->
+    <section class="content-grid-section">
+        <h3>Other Categories</h3>
+        <div class="categories-grid">
+            {% for cat in categories %}
+                {% if cat.id != category.id %}
+                <a href="{% url 'category' cat.slug %}" class="category-card" style="text-decoration: none; color: inherit;">
+                    <div class="category-icon">
+                        {% if cat.icon %}
+                            <i class="{{ cat.icon }}"></i>
+                        {% else %}
+                            📺
+                        {% endif %}
+                    </div>
+                    <div class="category-name">{{ cat.name }}</div>
+                    <div style="font-size: 12px; color: #888; margin-top: 8px;">{{ cat.videos.count }} videos</div>
+                </a>
+                {% endif %}
+            {% endfor %}
+        </div>
+    </section>
+{% endblock %}
