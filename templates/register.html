@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% block content %}
+<section class="hero-section" style="padding: 70px 5% !important; min-height: 300px; display: flex; flex-direction: column; justify-content: center;">
+    <h2 style="margin-bottom: 12px;">Create your account</h2>
+    <p style="color: #cccccc; margin: 0;">Join Kisii TV to save videos, like content, and keep track of your favorites.</p>
+</section>
+
+<section class="content-grid-section">
+    <div style="max-width: 520px; margin: 0 auto; background: #1c1c1c; padding: 30px; border-radius: 10px; border: 1px solid #2a2a2a;">
+        <form method="post">
+            {% csrf_token %}
+            {{ form.non_field_errors }}
+            <div style="display: flex; flex-direction: column; gap: 16px;">
+                <div>
+                    <label style="display: block; margin-bottom: 8px; color: #fff;">Username</label>
+                    {{ form.username }}
+                </div>
+                <div>
+                    <label style="display: block; margin-bottom: 8px; color: #fff;">Email</label>
+                    {{ form.email }}
+                </div>
+                <div>
+                    <label style="display: block; margin-bottom: 8px; color: #fff;">Password</label>
+                    {{ form.password1 }}
+                </div>
+                <div>
+                    <label style="display: block; margin-bottom: 8px; color: #fff;">Confirm password</label>
+                    {{ form.password2 }}
+                </div>
+                <button type="submit" style="background: linear-gradient(135deg, #e50914 0%, #cc000d 100%); color: #fff; padding: 12px 20px; border: none; border-radius: 6px; cursor: pointer; font-weight: 600;">Create Account</button>
+            </div>
+        </form>
+        <p style="margin-top: 16px; color: #888;">Already have an account? <a href="{% url 'login' %}" style="color: #e50914;">Sign in</a></p>
+    </div>
+</section>
+{% endblock %}

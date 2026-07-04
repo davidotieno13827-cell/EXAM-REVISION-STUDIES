@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% block content %}
+<section class="hero-section" style="padding: 70px 5% !important; min-height: 300px; display: flex; flex-direction: column; justify-content: center;">
+    <h2 style="margin-bottom: 12px;">Welcome back</h2>
+    <p style="color: #cccccc; margin: 0;">Sign in to access your watchlist and liked videos.</p>
+</section>
+
+<section class="content-grid-section">
+    <div style="max-width: 520px; margin: 0 auto; background: #1c1c1c; padding: 30px; border-radius: 10px; border: 1px solid #2a2a2a;">
+        <form method="post">
+            {% csrf_token %}
+            {{ form.non_field_errors }}
+            <div style="display: flex; flex-direction: column; gap: 16px;">
+                <div>
+                    <label style="display: block; margin-bottom: 8px; color: #fff;">Username</label>
+                    {{ form.username }}
+                </div>
+                <div>
+                    <label style="display: block; margin-bottom: 8px; color: #fff;">Password</label>
+                    {{ form.password }}
+                </div>
+                <button type="submit" style="background: linear-gradient(135deg, #e50914 0%, #cc000d 100%); color: #fff; padding: 12px 20px; border: none; border-radius: 6px; cursor: pointer; font-weight: 600;">Sign In</button>
+            </div>
+        </form>
+        <p style="margin-top: 16px; color: #888;">New here? <a href="{% url 'register' %}" style="color: #e50914;">Create an account</a></p>
+    </div>
+</section>
+{% endblock %}
