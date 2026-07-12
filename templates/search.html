@@ -8,7 +8,7 @@
         {% if query %}
             <p style="font-size: 18px; color: #cccccc; margin: 0;">
                 {% if results.count %}
-                    Found <span style="color: #e50914; font-weight: bold;">{{ results.count }}</span> result{{ results.count|pluralize }} for "{{ query }}"
+                    Found <span style="color: var(--brand-primary); font-weight: bold;">{{ results.count }}</span> result{{ results.count|pluralize }} for "{{ query }}"
                 {% else %}
                     No results found for "{{ query }}"
                 {% endif %}
@@ -54,7 +54,7 @@
                 <i class="fas fa-search" style="font-size: 48px; color: #888; margin-bottom: 20px; display: block;"></i>
                 <h3 style="color: #ccc; margin-bottom: 10px;">No videos found</h3>
                 <p style="color: #888; margin-bottom: 30px;">Try searching with different keywords</p>
-                <a href="/" style="background: linear-gradient(135deg, #e50914 0%, #cc000d 100%); color: #fff; padding: 12px 30px; text-decoration: none; border-radius: 6px; display: inline-block;">
+                <a href="/" style="background: linear-gradient(135deg, var(--brand-primary) 0%, var(--brand-secondary) 100%); color: #fff; padding: 12px 30px; text-decoration: none; border-radius: 6px; display: inline-block;">
                     <i class="fas fa-home"></i> Back to Home
                 </a>
             </div>

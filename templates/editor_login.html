@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<section class="content-grid-section" style="padding: 64px 5%; min-height: 320px; display:flex; align-items:center; justify-content:center;">
+    <div style="max-width:420px; width:100%; background:#141414; padding:28px; border-radius:10px; border:1px solid #222;">
+        <h2 style="margin:0 0 8px;">Editor Access</h2>
+        <p style="color:#bbb; margin:0 0 18px;">Enter the editor password to continue to the dashboard.</p>
+        <form method="post">
+            {% csrf_token %}
+            {% if next %}
+                <input type="hidden" name="next" value="{{ next }}" />
+            {% endif %}
+            {% if error %}
+                <div style="margin-bottom:12px; color:#ff8a8a; font-size:14px;">{{ error }}</div>
+            {% endif %}
+            <div style="display:flex; flex-direction:column; gap:12px;">
+                <label style="color:#ccc; font-size:14px;">Editor Password
+                    <input type="password" name="editor_password" required style="width:100%; margin-top:6px; padding:12px; border:1px solid #333; border-radius:6px; background:#0f0f0f; color:#fff;" placeholder="Enter editor password" />
+                </label>
+                <button type="submit" class="btn-primary" style="padding:12px 18px; font-weight:700;">Access Editor Dashboard</button>
+            </div>
+        </form>
+        <div style="margin-top: 20px; border-top: 1px solid #333; padding-top: 16px;">
+            <p style="color:#888; margin: 0 0 12px 0; font-size: 13px;">Only authorized editors can access this area. Contact the administrator if you need the password updated.</p>
+            <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+                <a href="{% url 'auth_choice' %}" style="color:#3b82f6; text-decoration:none; font-size:13px; font-weight:600; transition:color 0.2s;">Back to Auth</a>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

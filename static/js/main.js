@@ -1,5 +1,23 @@
 /* ===== Interactive Features ===== */
 
+// Password visibility toggle - defined globally so it's available for inline onclick handlers
+function togglePasswordVisibility(fieldId, button) {
+    const field = document.getElementById(fieldId);
+    const icon = button.querySelector('i');
+
+    if (field && icon) {
+        if (field.type === 'password') {
+            field.type = 'text';
+            icon.classList.remove('fa-eye');
+            icon.classList.add('fa-eye-slash');
+        } else {
+            field.type = 'password';
+            icon.classList.remove('fa-eye-slash');
+            icon.classList.add('fa-eye');
+        }
+    }
+}
+
 document.addEventListener('DOMContentLoaded', function () {
     // Mobile menu toggle
     const mobileMenuToggle = document.querySelector('.mobile-menu-toggle');
@@ -12,20 +30,46 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Theme toggle
     const themeToggle = document.getElementById('themeToggle');
-    const storedTheme = localStorage.getItem('kisii-theme');
-    if (storedTheme === 'light') {
-        document.body.classList.add('theme-light');
-    }
+    const storageKey = 'kisii-theme';
+    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+
+    const applyTheme = (theme) => {
+        document.body.classList.remove('theme-light', 'theme-dark');
+
+        if (theme === 'light') {
+            document.body.classList.add('theme-light');
+        } else if (theme === 'dark') {
+            document.body.classList.add('theme-dark');
+        }
+
+        localStorage.setItem(storageKey, theme);
+
+        if (themeToggle) {
+            const icon = themeToggle.querySelector('i');
+            if (icon) {
+                icon.className = theme === 'light' ? 'fas fa-sun' : 'fas fa-moon';
+            }
+        }
+    };
+
+    const getSystemTheme = () => (mediaQuery.matches ? 'dark' : 'light');
+
+    const initialTheme = 'light';
+    applyTheme(initialTheme);
 
     if (themeToggle) {
         themeToggle.addEventListener('click', () => {
-            document.body.classList.toggle('theme-light');
-            const isLight = document.body.classList.contains('theme-light');
-            localStorage.setItem('kisii-theme', isLight ? 'light' : 'dark');
-            const icon = themeToggle.querySelector('i');
-            icon.className = isLight ? 'fas fa-sun' : 'fas fa-moon';
+            const isDark = document.body.classList.contains('theme-dark');
+            const nextTheme = isDark ? 'light' : 'dark';
+            applyTheme(nextTheme);
         });
     }
+
+    mediaQuery.addEventListener?.('change', (event) => {
+        if (!localStorage.getItem(storageKey)) {
+            applyTheme(event.matches ? 'dark' : 'light');
+        }
+    });
 
     // Hero slide rotation
     const heroTitle = document.querySelector('.hero-section h2');
@@ -101,6 +145,44 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
+    // Ensure password visibility toggles exist for any password inputs (admin/editor pages)
+    const addPasswordToggles = () => {
+        const pwdInputs = document.querySelectorAll('input[type="password"]');
+        pwdInputs.forEach((input) => {
+            // don't add if already has a sibling toggle button
+            const wrapper = input.closest('.password-input-wrapper') || input.parentElement;
+            const hasToggle = wrapper && wrapper.querySelector && wrapper.querySelector('.password-toggle-btn');
+            if (hasToggle) return;
+
+            // ensure input has an id for toggle function
+            if (!input.id) {
+                input.id = 'pwd_' + Math.random().toString(36).slice(2, 9);
+            }
+
+            const btn = document.createElement('button');
+            btn.type = 'button';
+            btn.className = 'password-toggle-btn';
+            btn.setAttribute('aria-label', 'Toggle password visibility');
+            btn.title = 'Show or hide password';
+            btn.style = 'color:#888; margin-left:8px;';
+            btn.innerHTML = '<i class="fas fa-eye"></i>';
+            btn.addEventListener('click', function () {
+                togglePasswordVisibility(input.id, this);
+            });
+
+            // append the button next to the input
+            if (wrapper) {
+                wrapper.style.position = 'relative';
+                // try to position button inside wrapper
+                wrapper.appendChild(btn);
+            } else {
+                input.parentElement.appendChild(btn);
+            }
+        });
+    };
+
+    addPasswordToggles();
+
     // Newsletter subscription
     const newsletterForm = document.getElementById('newsletterForm');
     const newsletterStatus = document.getElementById('newsletterStatus');
@@ -145,186 +227,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 submitButton.innerHTML = originalButtonText;
             }
         });
-    }
-
-    // Hero parallax and featured card rotation
-    const heroSection = document.querySelector('.hero-section');
-    const heroContent = document.querySelector('.hero-content');
-    if (heroSection && heroContent) {
-        window.addEventListener('scroll', () => {
-            const offset = window.scrollY * 0.15;
-            heroContent.style.setProperty('--hero-shift', `${Math.min(offset, 60)}px`);
-        }, { passive: true });
-    }
-
-    const featuredSlides = document.querySelectorAll('.featured-slide');
-    const autoplayToggle = document.getElementById('autoplayToggle');
-    let featuredRotationTimer = null;
-    let autoplayEnabled = true;
-    let hoverPaused = false;
-
-    const startFeaturedRotation = () => {
-        if (featuredRotationTimer) {
-            clearInterval(featuredRotationTimer);
-        }
-
-        featuredRotationTimer = setInterval(() => {
-            if (!autoplayEnabled || hoverPaused) {
-                return;
-            }
-
-            featuredSlides.forEach((slide, index) => {
-                slide.classList.toggle('is-active', index === (index + 1) % featuredSlides.length);
-            });
-        }, 4000);
-    };
-
-    if (featuredSlides.length > 1) {
-        let activeIndex = 0;
-        const rotateFeaturedSlides = () => {
-            if (!autoplayEnabled || hoverPaused) {
-                return;
-            }
-            featuredSlides.forEach((slide, index) => {
-                slide.classList.toggle('is-active', index === activeIndex);
-            });
-            activeIndex = (activeIndex + 1) % featuredSlides.length;
-        };
-
-        featuredRotationTimer = setInterval(rotateFeaturedSlides, 4000);
-        featuredSlides[0].classList.add('is-active');
-
-        const featuredHoverZone = document.querySelector('.playlist-rail');
-        if (featuredHoverZone) {
-            featuredHoverZone.addEventListener('mouseenter', () => {
-                hoverPaused = true;
-            });
-            featuredHoverZone.addEventListener('mouseleave', () => {
-                hoverPaused = false;
-            });
-        }
-
-        if (autoplayToggle) {
-            autoplayToggle.addEventListener('click', () => {
-                autoplayEnabled = !autoplayEnabled;
-                autoplayToggle.innerHTML = autoplayEnabled
-                    ? '<i class="fas fa-pause"></i> Pause'
-                    : '<i class="fas fa-play"></i> Play';
-                autoplayToggle.setAttribute('aria-pressed', autoplayEnabled ? 'true' : 'false');
-
-                if (autoplayEnabled) {
-                    rotateFeaturedSlides();
-                } else if (featuredRotationTimer) {
-                    clearInterval(featuredRotationTimer);
-                }
-            });
-        }
-    }
-
-    const playlistItems = document.querySelectorAll('.playlist-item');
-    const previewModal = document.getElementById('previewModal');
-    const previewModalCard = previewModal?.querySelector('.preview-modal-card');
-    const previewModalTitle = document.getElementById('previewModalTitle');
-    const previewModalDescription = document.getElementById('previewModalDescription');
-    const previewModalLink = document.getElementById('previewModalLink');
-    const previewVideo = document.getElementById('previewVideo');
-    const previewFullscreenBtn = document.getElementById('previewFullscreenBtn');
-    let previewFullscreen = false;
-
-    const closePreviewModal = () => {
-        previewModal.classList.remove('is-open');
-        previewModal.setAttribute('aria-hidden', 'true');
-        previewModalCard.classList.remove('is-fullscreen');
-        previewFullscreen = false;
-        previewVideo?.pause();
-    };
-
-    playlistItems.forEach(item => {
-        item.addEventListener('mouseenter', () => {
-            item.classList.add('is-active');
-        });
-        item.addEventListener('mouseleave', () => {
-            item.classList.remove('is-active');
-        });
-        item.addEventListener('click', () => {
-            previewModalTitle.textContent = item.dataset.title || 'Preview';
-            previewModalDescription.textContent = item.dataset.description || 'A featured broadcast from Kisii TV.';
-            previewModalLink.href = item.dataset.link || '#';
-            previewModal.classList.add('is-open');
-            previewModal.setAttribute('aria-hidden', 'false');
-            previewVideo?.play().catch(() => { });
-        });
-    });
-
-    document.querySelectorAll('[data-close-modal]').forEach(control => {
-        control.addEventListener('click', () => {
-            closePreviewModal();
-        });
-    });
-
-    document.addEventListener('keydown', (event) => {
-        if (event.key === 'Escape' && previewModal?.classList.contains('is-open')) {
-            closePreviewModal();
-        }
-    });
-
-    previewFullscreenBtn?.addEventListener('click', () => {
-        previewFullscreen = !previewFullscreen;
-        previewModalCard.classList.toggle('is-fullscreen', previewFullscreen);
-    });
-
-    const heroProgressBar = document.getElementById('heroProgressBar');
-    if (heroProgressBar) {
-        let progress = 0;
-        const interval = setInterval(() => {
-            progress = (progress + 1) % 101;
-            heroProgressBar.style.width = `${progress}%`;
-            if (progress === 100) {
-                clearInterval(interval);
-            }
-        }, 250);
-    }
-
-    const countdownTimer = document.getElementById('countdownTimer');
-    if (countdownTimer) {
-        let secondsLeft = 30;
-        setInterval(() => {
-            secondsLeft = secondsLeft > 0 ? secondsLeft - 1 : 30;
-            const minutes = String(Math.floor(secondsLeft / 60)).padStart(2, '0');
-            const secs = String(secondsLeft % 60).padStart(2, '0');
-            countdownTimer.textContent = `${minutes}:${secs}`;
-        }, 1000);
-    }
-
-    const featuredTitle = document.getElementById('featuredTitle');
-    const featuredDescription = document.getElementById('featuredDescription');
-    const featuredLink = document.getElementById('featuredLink');
-    const featuredItems = [
-        {
-            title: 'Featured Broadcast',
-            description: 'Catch the latest live stories, sports highlights, and community updates from Kisii TV.',
-            link: featuredLink?.getAttribute('href') || '#'
-        },
-        {
-            title: 'Live Sports Highlights',
-            description: 'Relive the best moments from the latest local and regional matches.',
-            link: featuredLink?.getAttribute('href') || '#'
-        },
-        {
-            title: 'Community Spotlight',
-            description: 'Watch inspiring interviews and stories from the people shaping Kisii.',
-            link: featuredLink?.getAttribute('href') || '#'
-        }
-    ];
-
-    if (featuredTitle && featuredDescription && featuredLink) {
-        let featuredIndex = 0;
-        setInterval(() => {
-            featuredIndex = (featuredIndex + 1) % featuredItems.length;
-            featuredTitle.textContent = featuredItems[featuredIndex].title;
-            featuredDescription.textContent = featuredItems[featuredIndex].description;
-            featuredLink.setAttribute('href', featuredItems[featuredIndex].link);
-        }, 4000);
     }
 
     // Add loading animation to images
@@ -401,6 +303,16 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
+    // Add delete confirmation for dashboard actions
+    document.querySelectorAll('.delete-button').forEach(button => {
+        button.addEventListener('click', function (event) {
+            const confirmed = window.confirm('Are you sure you want to delete this item? This action cannot be undone.');
+            if (!confirmed) {
+                event.preventDefault();
+            }
+        });
+    });
+
     // Add ripple effect to buttons on click
     document.querySelectorAll('button, a[class*="button"]').forEach(element => {
         element.addEventListener('click', function (e) {
@@ -409,10 +321,19 @@ document.addEventListener('DOMContentLoaded', function () {
             ripple.style.pointerEvents = 'none';
             ripple.style.borderRadius = '50%';
             ripple.style.background = 'rgba(255, 255, 255, 0.5)';
+            ripple.style.width = '0px';
+            ripple.style.height = '0px';
+            ripple.style.left = '50%';
+            ripple.style.top = '50%';
+            ripple.style.transform = 'translate(-50%, -50%)';
+            ripple.style.opacity = '1';
             ripple.style.animation = 'ripple 0.6s ease-out';
 
-            this.parentElement.style.position = 'relative';
-            this.parentElement.appendChild(ripple);
+            if (window.getComputedStyle(this).position === 'static') {
+                this.style.position = 'relative';
+            }
+            this.style.overflow = 'hidden';
+            this.appendChild(ripple);
 
             setTimeout(() => ripple.remove(), 600);
         });

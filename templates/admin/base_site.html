@@ -1,0 +1,52 @@
+{% extends "admin/base.html" %}
+{% load static %}
+
+{% block extrahead %}
+  {{ block.super }}
+  <style>
+    .password-toggle-btn { background: transparent; border: none; color: #6b7280; cursor: pointer; padding: 6px; }
+    .password-toggle-btn:focus { outline: none; color: #0b74da; }
+    .password-input-wrapper input[type="password"], .password-input-wrapper input[type="text"] { padding-right: 36px; }
+  </style>
+  <script>
+    (function () {
+      function addAdminPasswordToggles() {
+        document.querySelectorAll('input[type="password"]').forEach(function (input) {
+          // don't add if already present
+          if (input.nextElementSibling && input.nextElementSibling.classList && input.nextElementSibling.classList.contains('password-toggle-btn')) return;
+
+          var btn = document.createElement('button');
+          btn.type = 'button';
+          btn.className = 'password-toggle-btn';
+          btn.setAttribute('aria-label', 'Toggle password visibility');
+          btn.innerHTML = '<i class="fas fa-eye" aria-hidden="true"></i>';
+          btn.addEventListener('click', function () {
+            if (input.type === 'password') {
+              input.type = 'text';
+              btn.innerHTML = '<i class="fas fa-eye-slash" aria-hidden="true"></i>';
+            } else {
+              input.type = 'password';
+              btn.innerHTML = '<i class="fas fa-eye" aria-hidden="true"></i>';
+            }
+          });
+
+          // try to insert after the input
+          if (input.parentNode) {
+            input.parentNode.insertBefore(btn, input.nextSibling);
+          }
+        });
+      }
+
+      document.addEventListener('DOMContentLoaded', function () {
+        addAdminPasswordToggles();
+        // Also run after DOM mutations (for dynamically added fields)
+        try {
+          var obs = new MutationObserver(function () { addAdminPasswordToggles(); });
+          if (document.body) obs.observe(document.body, { childList: true, subtree: true });
+        } catch (e) {
+          // ignore if MutationObserver not available or document.body missing
+        }
+      });
+    })();
+  </script>
+{% endblock %}

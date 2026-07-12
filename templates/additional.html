@@ -2,35 +2,15 @@
 {% load static %}
 
 {% block content %}
-    <!-- Newsletter Signup Section -->
-    <section class="newsletter-section" id="newsletter" style="padding: 60px 5% !important; background: linear-gradient(135deg, #1a1a1a 0%, #2a0a0a 100%); text-align: center;">
-        <h2 style="margin: 0 0 15px 0; font-size: 32px; font-weight: 900; color: #ffffff;">
-            <i class="fas fa-bell" style="margin-right: 12px; color: #e50914;"></i>Never Miss an Update
-        </h2>
-        <p style="margin: 0 0 30px 0; font-size: 16px; color: #ccc; max-width: 500px; margin-left: auto; margin-right: auto;">
-            Subscribe to our newsletter and get the latest videos, news, and updates delivered directly to your inbox.
-        </p>
-        
-        <form id="newsletter-form" method="POST" action="{% url 'subscribe_newsletter' %}" style="max-width: 500px; margin: 0 auto; display: flex; gap: 10px; flex-wrap: wrap; justify-content: center;">
-            {% csrf_token %}
-            <input type="email" name="email" id="newsletter-email" placeholder="Enter your email address" required
-                   style="flex: 1; min-width: 250px; padding: 14px 20px; background-color: #2a2a2a; border: 1px solid #e50914; border-radius: 4px; color: #fff; font-size: 14px; transition: all 0.3s;">
-            <button type="submit" id="newsletter-btn" style="background: linear-gradient(135deg, #e50914 0%, #cc000d 100%); color: #fff; padding: 14px 30px; border: none; border-radius: 4px; font-weight: 700; text-transform: uppercase; cursor: pointer; transition: all 0.3s; white-space: nowrap;">
-                Subscribe
-            </button>
-        </form>
-        <p style="font-size: 12px; color: #888; margin-top: 15px;">We respect your privacy. Unsubscribe at any time.</p>
-        <div id="newsletter-message" style="margin-top: 15px; font-size: 14px; min-height: 20px;"></div>
-    </section>
-
+    <!-- Newsletter signup removed -->
     <!-- FAQ Section -->
     <section class="content-grid-section" style="background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);">
         <h2 style="text-align: center; border: none; padding: 0; margin-bottom: 30px; font-size: 32px;">
-            <i class="fas fa-question-circle" style="margin-right: 12px; color: #e50914;"></i>Frequently Asked Questions
+            <i class="fas fa-question-circle" style="margin-right: 12px; color: var(--brand-primary);"></i>Frequently Asked Questions
         </h2>
         
         <div style="max-width: 800px; margin: 0 auto; display: grid; gap: 15px;">
-            <details style="background: #1c1c1c; padding: 20px; border-radius: 6px; border-left: 4px solid #e50914; cursor: pointer;">
+            <details style="background: #1c1c1c; padding: 20px; border-radius: 6px; border-left: 4px solid var(--brand-primary); cursor: pointer;">
                 <summary style="color: #fff; font-weight: 600; font-size: 15px; user-select: none;">
                     How can I watch Kisii TV live?
                 </summary>
@@ -39,7 +19,7 @@
                 </p>
             </details>
 
-            <details style="background: #1c1c1c; padding: 20px; border-radius: 6px; border-left: 4px solid #e50914; cursor: pointer;">
+            <details style="background: #1c1c1c; padding: 20px; border-radius: 6px; border-left: 4px solid var(--brand-primary); cursor: pointer;">
                 <summary style="color: #fff; font-weight: 600; font-size: 15px; user-select: none;">
                     Are there any costs to use this platform?
                 </summary>
@@ -48,7 +28,7 @@
                 </p>
             </details>
 
-            <details style="background: #1c1c1c; padding: 20px; border-radius: 6px; border-left: 4px solid #e50914; cursor: pointer;">
+            <details style="background: #1c1c1c; padding: 20px; border-radius: 6px; border-left: 4px solid var(--brand-primary); cursor: pointer;">
                 <summary style="color: #fff; font-weight: 600; font-size: 15px; user-select: none;">
                     How can I contact Kisii TV?
                 </summary>
@@ -57,7 +37,7 @@
                 </p>
             </details>
 
-            <details style="background: #1c1c1c; padding: 20px; border-radius: 6px; border-left: 4px solid #e50914; cursor: pointer;">
+            <details style="background: #1c1c1c; padding: 20px; border-radius: 6px; border-left: 4px solid var(--brand-primary); cursor: pointer;">
                 <summary style="color: #fff; font-weight: 600; font-size: 15px; user-select: none;">
                     Can I download videos to watch offline?
                 </summary>
@@ -74,7 +54,7 @@
         }
 
         details[open] summary {
-            color: #e50914;
+            color: var(--brand-primary);
         }
 
         details[open] {
@@ -87,7 +67,7 @@
 
         details summary::before {
             content: '▶ ';
-            color: #e50914;
+            color: var(--brand-primary);
             margin-right: 10px;
             transition: transform 0.3s;
         }
@@ -97,47 +77,5 @@
         }
     </style>
 
-    <script>
-        // Handle newsletter form submission with AJAX
-        document.getElementById('newsletter-form').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const form = this;
-            const emailInput = document.getElementById('newsletter-email');
-            const messageDiv = document.getElementById('newsletter-message');
-            const submitBtn = document.getElementById('newsletter-btn');
-            
-            // Disable button and show loading state
-            submitBtn.disabled = true;
-            submitBtn.textContent = 'Subscribing...';
-            messageDiv.innerHTML = '';
-            
-            const formData = new FormData(form);
-            
-            fetch(form.action, {
-                method: 'POST',
-                body: formData
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.status === 'success') {
-                    messageDiv.innerHTML = '<span style="color: #4caf50;"><i class="fas fa-check-circle"></i> ' + data.message + '</span>';
-                    emailInput.value = '';
-                } else if (data.status === 'info') {
-                    messageDiv.innerHTML = '<span style="color: #2196f3;"><i class="fas fa-info-circle"></i> ' + data.message + '</span>';
-                } else {
-                    messageDiv.innerHTML = '<span style="color: #f44336;"><i class="fas fa-exclamation-circle"></i> ' + data.message + '</span>';
-                }
-            })
-            .catch(error => {
-                messageDiv.innerHTML = '<span style="color: #f44336;"><i class="fas fa-exclamation-circle"></i> An error occurred. Please try again.</span>';
-                console.error('Error:', error);
-            })
-            .finally(() => {
-                // Re-enable button
-                submitBtn.disabled = false;
-                submitBtn.textContent = 'Subscribe';
-            });
-        });
-    </script>
+    <!-- Newsletter script removed -->
 {% endblock %}

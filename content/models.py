@@ -13,6 +13,9 @@ class Category(models.Model):
     class Meta:
         ordering = ['order', 'name']
         verbose_name_plural = "Categories"
+        indexes = [
+            models.Index(fields=['order', 'name']),
+        ]
     
     def __str__(self):
         return self.name
@@ -31,6 +34,11 @@ class ScheduleEntry(models.Model):
     class Meta:
         ordering = ['start_time']
         verbose_name_plural = 'Schedule Entries'
+        indexes = [
+            models.Index(fields=['start_time']),
+            models.Index(fields=['status']),
+            models.Index(fields=['is_featured']),
+        ]
 
     def __str__(self):
         return f"{self.title} at {self.start_time}"
@@ -43,7 +51,7 @@ class Video(models.Model):
     description = models.TextField()
     category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='videos')
     thumbnail = models.ImageField(upload_to='thumbnails/', blank=True, null=True)
-    video_url = models.URLField(help_text="URL to the video (YouTube, Vimeo, etc.)")
+    video_url = models.URLField(help_text="URL to the video (YouTube, Vimeo, etc.)", blank=True, null=True)
     duration = models.IntegerField(default=0, help_text="Duration in seconds")
     views = models.IntegerField(default=0)
     likes = models.IntegerField(default=0)
@@ -56,6 +64,13 @@ class Video(models.Model):
     class Meta:
         ordering = ['-published_date']
         verbose_name_plural = "Videos"
+        indexes = [
+            models.Index(fields=['category']),
+            models.Index(fields=['published_date']),
+            models.Index(fields=['is_featured']),
+            models.Index(fields=['is_live']),
+            models.Index(fields=['-views', '-likes', '-published_date'], name='video_popular_idx'),
+        ]
     
     def __str__(self):
         return self.title
@@ -88,6 +103,10 @@ class Comment(models.Model):
     class Meta:
         ordering = ['-created_at']
         verbose_name_plural = "Comments"
+        indexes = [
+            models.Index(fields=['is_approved', '-created_at'], name='comment_approved_created_idx'),
+            models.Index(fields=['video', '-created_at'], name='comment_video_created_idx'),
+        ]
     
     def __str__(self):
         return f"Comment by {self.author_name} on {self.video.title}"
@@ -104,6 +123,10 @@ class NewsletterSubscriber(models.Model):
         ordering = ['-subscribed_at']
         verbose_name = "Newsletter Subscriber"
         verbose_name_plural = "Newsletter Subscribers"
+        indexes = [
+            models.Index(fields=['is_active']),
+            models.Index(fields=['subscribed_at']),
+        ]
     
     def __str__(self):
         return f"{self.email} ({'Active' if self.is_active else 'Inactive'})"
@@ -118,6 +141,9 @@ class WatchlistItem(models.Model):
     class Meta:
         unique_together = ('user', 'video')
         ordering = ['-added_at']
+        indexes = [
+            models.Index(fields=['user', '-added_at'], name='watchlist_user_added_idx'),
+        ]
 
     def __str__(self):
         return f"{self.user.username} -> {self.video.title}"
@@ -132,6 +158,12 @@ class VideoLike(models.Model):
     class Meta:
         unique_together = ('user', 'video')
         ordering = ['-created_at']
+        indexes = [
+            models.Index(fields=['user', '-created_at'], name='videolike_user_created_idx'),
+            models.Index(fields=['video', '-created_at'], name='videolike_video_created_idx'),
+        ]
 
     def __str__(self):
         return f"{self.user.username} likes {self.video.title}"
+
+

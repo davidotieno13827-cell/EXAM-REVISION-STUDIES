@@ -1,0 +1,119 @@
+{% extends 'base.html' %}
+
+{% block title %}Application Submitted - Kisii TV{% endblock %}
+
+{% block extra_css %}
+<style>
+  .success-container {
+    max-width: 600px;
+    margin: 100px auto;
+    padding: 40px;
+    background: #f8f9fa;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  }
+
+  .success-icon {
+    font-size: 60px;
+    margin-bottom: 20px;
+  }
+
+  .success-container h1 {
+    color: #28a745;
+    margin-bottom: 15px;
+    font-size: 32px;
+  }
+
+  .success-container p {
+    color: #666;
+    line-height: 1.6;
+    margin-bottom: 15px;
+    font-size: 16px;
+  }
+
+  .success-box {
+    background: #d4edda;
+    border: 1px solid #c3e6cb;
+    border-radius: 5px;
+    padding: 20px;
+    margin: 20px 0;
+    color: #155724;
+  }
+
+  .next-steps {
+    background: #e7f3ff;
+    border-left: 4px solid #007bff;
+    padding: 20px;
+    margin: 25px 0;
+    text-align: left;
+    border-radius: 4px;
+  }
+
+  .next-steps h3 {
+    margin-top: 0;
+    color: #004085;
+  }
+
+  .next-steps ol {
+    margin: 10px 0 0 0;
+    padding-left: 20px;
+  }
+
+  .next-steps li {
+    margin: 8px 0;
+    color: #004085;
+  }
+
+  .back-link {
+    display: inline-block;
+    margin-top: 30px;
+    padding: 12px 30px;
+    background: #007bff;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    transition: all 0.3s;
+  }
+
+  .back-link:hover {
+    background: #0056b3;
+    text-decoration: none;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="success-container">
+  <div class="success-icon">✅</div>
+  
+  <h1>Application Submitted!</h1>
+  
+  <div class="success-box">
+    <strong>Thank you for your interest in joining Kisii TV.</strong>
+    <p>Your application has been successfully submitted and is now pending review.</p>
+  </div>
+
+  <p>
+    Our team will carefully review your application and will contact you via the email address 
+    you provided within 2-3 business days.
+  </p>
+
+  <div class="next-steps">
+    <h3>What Happens Next?</h3>
+    <ol>
+      <li><strong>Review:</strong> Our team will review your application and bio</li>
+      <li><strong>Approval:</strong> If approved, you'll receive a confirmation email</li>
+      <li><strong>Account Creation:</strong> A user account will be created for you</li>
+      <li><strong>Welcome:</strong> You'll be ready to access Kisii TV as a {{ request.POST.role|default:"member" }}</li>
+    </ol>
+  </div>
+
+  <p style="color: #666; font-size: 14px;">
+    In the meantime, feel free to explore Kisii TV as a public visitor. 
+    You can watch our content, read comments, and get familiar with our platform.
+  </p>
+
+  <a href="{% url 'home' %}" class="back-link">Return to Kisii TV</a>
+</div>
+{% endblock %}

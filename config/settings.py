@@ -2,6 +2,7 @@
 Django settings for KISIITV project.
 """
 
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -26,7 +27,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'content', # Add your newly created app here
+    'content',
 ]
 
 MIDDLEWARE = [
@@ -71,7 +72,7 @@ DATABASES = {
 }
 
 
-# Password validation
+# Password validation - ENHANCED SECURITY
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -79,6 +80,9 @@ AUTH_PASSWORD_VALIDATORS = [
     },
     {
         'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+        'OPTIONS': {
+            'min_length': 12,
+        }
     },
     {
         'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
@@ -86,7 +90,18 @@ AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
+    {
+        'NAME': 'config.validators.ComplexPasswordValidator',
+    },
 ]
+
+# Password reset settings
+PASSWORD_RESET_TIMEOUT = 3600  # 1 hour
+
+# Editor access password
+EDITOR_ACCESS_PASSWORD = os.getenv('EDITOR_ACCESS_PASSWORD', 'KisiiTVEditor2026!')
+
+
 
 
 # Internationalization
@@ -138,3 +153,28 @@ LOGGING = {
         },
     },
 }
+
+# ===== SECURITY CONFIGURATION =====
+
+# Email configuration
+EMAIL_BACKEND = os.getenv('EMAIL_BACKEND', 'django.core.mail.backends.smtp.EmailBackend')
+EMAIL_HOST = os.getenv('EMAIL_HOST', 'smtp.example.com')
+EMAIL_PORT = int(os.getenv('EMAIL_PORT', 587))
+EMAIL_USE_TLS = os.getenv('EMAIL_USE_TLS', 'True').lower() in ['true', '1', 'yes']
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER', '')
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD', '')
+DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL', 'Kisii TV <noreply@kisiitv.co.ke>')
+SERVER_EMAIL = os.getenv('SERVER_EMAIL', DEFAULT_FROM_EMAIL)
+ADMINS = [
+    ('Kisii TV Admin', os.getenv('ADMIN_EMAIL', 'admin@kisiitv.co.ke')),
+]
+MANAGERS = ADMINS
+
+# Development fallback: console backend when DEBUG is enabled and SMTP settings are not configured.
+if DEBUG and EMAIL_HOST_USER == '' and EMAIL_HOST_PASSWORD == '':
+    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+# Rate limiting - prevent brute force attacks
+# Login attempts: max 5 per minute per IP
+RATELIMIT_ENABLE = True
+RATELIMIT_VIEW = '5/m'  # 5 attempts per minute

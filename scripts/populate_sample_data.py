@@ -92,16 +92,6 @@ videos_data = [
         'is_live': False,
     },
     {
-        'title': 'Political Forum - Development Projects',
-        'slug': 'political-forum-development',
-        'description': 'Live political forum discussing ongoing development projects and their impact on the community.',
-        'category': categories['politics'],
-        'video_url': 'https://www.youtube.com/embed/QdK8U-download',
-        'duration': 120,
-        'is_featured': False,
-        'is_live': False,
-    },
-    {
         'title': 'Business Report - Market Updates',
         'slug': 'business-market-updates',
         'description': 'Weekly business report covering market trends, commodity prices, and business opportunities.',

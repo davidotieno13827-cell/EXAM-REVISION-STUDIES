@@ -1,28 +1,43 @@
 {% extends 'base.html' %}
-{% block content %}
-<section class="hero-section" style="padding: 70px 5% !important; min-height: 300px; display: flex; flex-direction: column; justify-content: center;">
-    <h2 style="margin-bottom: 12px;">Welcome back</h2>
-    <p style="color: #cccccc; margin: 0;">Sign in to access your watchlist and liked videos.</p>
-</section>
 
+{% block extra_css %}
+<style>
+    .hero-section {
+        display: none !important;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
 <section class="content-grid-section">
-    <div style="max-width: 520px; margin: 0 auto; background: #1c1c1c; padding: 30px; border-radius: 10px; border: 1px solid #2a2a2a;">
+    <div class="page-panel" style="max-width: 520px; margin: 0 auto;">
         <form method="post">
             {% csrf_token %}
+            {% if request.GET.next %}
+                <input type="hidden" name="next" value="{{ request.GET.next }}" />
+            {% endif %}
             {{ form.non_field_errors }}
             <div style="display: flex; flex-direction: column; gap: 16px;">
                 <div>
-                    <label style="display: block; margin-bottom: 8px; color: #fff;">Username</label>
+                    <label class="section-subtitle" style="display: block; margin-bottom: 8px;">Username</label>
                     {{ form.username }}
                 </div>
                 <div>
-                    <label style="display: block; margin-bottom: 8px; color: #fff;">Password</label>
-                    {{ form.password }}
+                    <label class="section-subtitle" style="display: block; margin-bottom: 8px;">Password</label>
+                    <div class="password-input-wrapper">
+                        {{ form.password }}
+                        <button type="button" class="password-toggle-btn" onclick="togglePasswordVisibility('id_password', this)" aria-label="Toggle password visibility" title="Show or hide password">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
                 </div>
-                <button type="submit" style="background: linear-gradient(135deg, #e50914 0%, #cc000d 100%); color: #fff; padding: 12px 20px; border: none; border-radius: 6px; cursor: pointer; font-weight: 600;">Sign In</button>
+                <button type="submit" class="btn-primary">Sign In</button>
             </div>
         </form>
-        <p style="margin-top: 16px; color: #888;">New here? <a href="{% url 'register' %}" style="color: #e50914;">Create an account</a></p>
+        <div style="margin-top: 20px; display: flex; flex-direction: column; gap: 12px;">
+            <p class="section-subtitle" style="margin: 0;"><a href="{% url 'password_reset' %}" style="text-decoration:none; color:#1e40af; font-weight:600;">Forgot your password?</a></p>
+            <p class="section-subtitle" style="margin: 0;"><a href="{% url 'auth_choice' %}" style="text-decoration:none; color:#1e40af; font-weight:600;">Back to sign-in options</a></p>
+        </div>
     </div>
 </section>
 {% endblock %}

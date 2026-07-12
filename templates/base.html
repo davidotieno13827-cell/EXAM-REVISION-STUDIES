@@ -7,7 +7,7 @@
     <meta name="description" content="Kisii TV - Omogusii's #1 National Broadcaster. Watch live news, sports, entertainment, and more 24/7 online.">
     <meta name="keywords" content="Kisii TV, Amandegere Y'omogusii, television, streaming, news, sports, entertainment, Kenya">
     <meta name="author" content="Kisii TV">
-    <meta name="theme-color" content="#e50914">
+    <meta name="theme-color" content="var(--brand-primary)">
     <meta property="og:title" content="Kisii TV | Amandegere Y'omogusii">
     <meta property="og:description" content="Omogusii's number 1 national broadcaster. Live streaming 24/7 - News, Sports, Entertainment, and more.">
     <meta property="og:type" content="website">
@@ -17,30 +17,34 @@
     <meta name="twitter:title" content="Kisii TV | Amandegere Y'omogusii">
     <meta name="twitter:description" content="Omogusii's number 1 national broadcaster. Live streaming 24/7">
     <title>{% block title %}Kisii TV | Amandegere Y'omogusii - Live Streaming{% endblock %}</title>
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}?v=2">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;600;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="canonical" href="http://127.0.0.1:8000/">
     <link rel="icon" type="image/x-icon" href="{% static 'img/favicon.ico' %}">
 </head>
-<body>
+<body class="has-logo-bg">
 
     <!-- Floating Social Icons -->
     <div class="floating-socials">
-        <a href="https://www.facebook.com" target="_blank" class="social-icon" title="Follow on Facebook">
-            <i class="fab fa-facebook-f"></i>
+        <a href="https://www.facebook.com" target="_blank" class="social-icon" title="Follow on Facebook" aria-label="Follow on Facebook">
+            <i class="fab fa-facebook-f" aria-hidden="true"></i>
+            <span class="sr-only">Follow on Facebook</span>
         </a>
-        <a href="https://www.twitter.com" target="_blank" class="social-icon" title="Follow on Twitter">
-            <i class="fab fa-twitter"></i>
+        <a href="https://www.twitter.com" target="_blank" class="social-icon" title="Follow on Twitter" aria-label="Follow on Twitter">
+            <i class="fab fa-twitter" aria-hidden="true"></i>
+            <span class="sr-only">Follow on Twitter</span>
         </a>
-        <a href="https://www.youtube.com" target="_blank" class="social-icon" title="Subscribe on YouTube">
-            <i class="fab fa-youtube"></i>
+        <a href="https://www.youtube.com" target="_blank" class="social-icon" title="Subscribe on YouTube" aria-label="Subscribe on YouTube">
+            <i class="fab fa-youtube" aria-hidden="true"></i>
+            <span class="sr-only">Subscribe on YouTube</span>
         </a>
     </div>
 
     <!-- Back to Top Button -->
-    <div class="back-to-top" id="backToTop" title="Back to Top">
-        <i class="fas fa-arrow-up"></i>
+    <div class="back-to-top" id="backToTop" title="Back to Top" role="button" aria-label="Back to top">
+        <i class="fas fa-arrow-up" aria-hidden="true"></i>
+        <span class="sr-only">Back to top</span>
     </div>
 
     <!-- Top Navigation Bar -->
@@ -48,62 +52,46 @@
         <div class="header-container">
             <div class="logo">
                 <a href="/">
-                    <h1>KISII TV</h1>
-                    <small class="slogan">Amandegere Y'omogusii</small>
+                    <img src="{% static 'kisiitvlogo.webp' %}" alt="Kisii TV" class="header-logo">
                 </a>
             </div>
 
-            <nav class="nav-menu">
-                <ul>
-                    <li><a href="/">Home</a></li>
-                    {% for category in categories %}
-                        <li><a href="{% url 'category' category.slug %}">{{ category.name }}</a></li>
-                    {% endfor %}
-                </ul>
-            </nav>
-
-            <button class="mobile-menu-toggle" type="button" aria-label="Toggle navigation">
-                <i class="fas fa-bars"></i>
-            </button>
-
-            <div class="nav-actions" style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
-                <button id="themeToggle" type="button" style="background: transparent; border: 1px solid #333; color: #fff; padding: 8px 10px; border-radius: 4px; cursor: pointer;" title="Toggle theme">
-                    <i class="fas fa-moon"></i>
-                </button>
-                {% if user.is_authenticated %}
-                <a href="{% url 'profile' %}" style="color: #fff; text-decoration: none; font-size: 14px;">
-                    <i class="fas fa-user"></i> Profile
+            <div class="header-right">
+                <div class="header-status-pill">
+                    <i class="fas fa-circle"></i>
+                    <span>Live now</span>
+                </div>
+                <a href="{% url 'search' %}" class="header-search-btn" title="Search" aria-label="Search videos">
+                    <i class="fas fa-search"></i>
                 </a>
-                <a href="{% url 'watchlist' %}" style="color: #fff; text-decoration: none; font-size: 14px;">
-                    <i class="fas fa-bookmark"></i> Watchlist
+                <a href="{% url 'auth_choice' %}" class="header-signin-btn" title="Sign In" aria-label="Sign in">
+                    <i class="fas fa-user"></i>
+                    <span>Sign In</span>
                 </a>
-                <a href="{% url 'logout' %}" style="color: #fff; text-decoration: none; font-size: 14px;">
-                    <i class="fas fa-sign-out-alt"></i> Logout
-                </a>
-                {% else %}
-                <a href="{% url 'login' %}" style="color: #fff; text-decoration: none; font-size: 14px;">
-                    <i class="fas fa-sign-in-alt"></i> Login
-                </a>
-                <a href="{% url 'register' %}" style="color: #fff; text-decoration: none; font-size: 14px;">
-                    <i class="fas fa-user-plus"></i> Register
-                </a>
-                {% endif %}
-                <form action="{% url 'search' %}" method="GET" style="display: flex; gap: 10px; flex-wrap: wrap;">
-                    <input type="text" name="q" placeholder="Search videos..." 
-                           style="padding: 8px 15px; background-color: #1c1c1c; border: 1px solid #333; border-radius: 4px; color: #fff; font-size: 13px; width: 200px;"
-                           required>
-                    <select name="sort" style="padding: 8px 12px; background-color: #1c1c1c; border: 1px solid #333; border-radius: 4px; color: #fff; font-size: 13px;">
-                        <option value="recent">Recent</option>
-                        <option value="popular">Popular</option>
-                        <option value="likes">Most Liked</option>
-                    </select>
-                    <button type="submit" class="search-icon" style="background: none; border: none; padding: 8px 12px; cursor: pointer;">
-                        <i class="fas fa-search"></i>
-                    </button>
-                </form>
             </div>
         </div>
+
+        <!-- Secondary Navigation Menu -->
+        <nav class="secondary-nav">
+            <ul class="secondary-nav-menu">
+                <li><a href="/">Home</a></li>
+                <li><a href="/category/news/">News</a></li>
+                <li><a href="/#tv">TV</a></li>
+                <li><a href="/#live-events">Live Events</a></li>
+            </ul>
+        </nav>
     </header>
+
+    {% if messages %}
+    <div style="max-width:1100px; margin: 20px auto 0; padding: 16px 20px; border-radius: 10px; background: #e6ffed; border: 1px solid #7dd48b; color: #064e3b; display: flex; align-items: center; gap: 12px; font-weight: 600;">
+        <i class="fas fa-check-circle" aria-hidden="true" style="font-size: 1.2rem;"></i>
+        <div>
+            {% for message in messages %}
+                {{ message }}
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
 
     <!-- Dynamic Content Area -->
     <main class="content-area">
@@ -114,73 +102,50 @@
     <!-- Global Footer with Real Broadcast & Contact Details -->
     <footer class="main-footer">
         <div class="footer-container">
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 40px; margin-bottom: 40px;">
-                <!-- About Section -->
-                <div>
-                    <h4 style="color: #e50914; margin-bottom: 15px; text-transform: uppercase; font-size: 14px; letter-spacing: 1px;">About Kisii TV</h4>
-                    <p style="font-size: 13px; line-height: 1.6; color: #aaa;">Kisii TV (Amandegere Y'omogusii) is Omogusii's number 1 national broadcaster. Broadcasting 24/7 with quality content that matters.</p>
+            <div class="footer-grid">
+                <div class="footer-card">
+                    <h4>About Kisii TV</h4>
+                    <p>Kisii TV (Amandegere Y'omogusii) is Omogusii's number 1 national broadcaster. Broadcasting 24/7 with quality content that matters.</p>
                 </div>
 
-                <!-- Broadcast Info -->
-                <div>
-                    <h4 style="color: #e50914; margin-bottom: 15px; text-transform: uppercase; font-size: 14px; letter-spacing: 1px;">Watch On</h4>
-                    <ul style="list-style: none; padding: 0; margin: 0; font-size: 13px;">
-                        <li style="margin-bottom: 8px;"><i class="fas fa-tv" style="color: #e50914; width: 20px;"></i> Zuku Channel 33</li>
-                        <li style="margin-bottom: 8px;"><i class="fas fa-tv" style="color: #e50914; width: 20px;"></i> GOtv Channel 810</li>
-                        <li style="margin-bottom: 8px;"><i class="fas fa-tv" style="color: #e50914; width: 20px;"></i> StarTimes Channel 619</li>
-                        <li><i class="fas fa-globe" style="color: #e50914; width: 20px;"></i> Online (This Website)</li>
+                <div class="footer-card">
+                    <h4>Watch On</h4>
+                    <ul class="footer-links">
+                        <li><i class="fas fa-tv"></i> Zuku Channel 33</li>
+                        <li><i class="fas fa-tv"></i> GOtv Channel 810</li>
+                        <li><i class="fas fa-tv"></i> StarTimes Channel 619</li>
+                        <li><i class="fas fa-globe"></i> Online (This Website)</li>
                     </ul>
                 </div>
 
-                <!-- Contact Info -->
-                <div>
-                    <h4 style="color: #e50914; margin-bottom: 15px; text-transform: uppercase; font-size: 14px; letter-spacing: 1px;">Get In Touch</h4>
-                    <ul style="list-style: none; padding: 0; margin: 0; font-size: 13px;">
-                        <li style="margin-bottom: 10px;">
-                            <i class="fas fa-phone" style="color: #e50914; width: 20px;"></i>
-                            <a href="tel:+254726547363" style="color: #ccc; text-decoration: none; transition: color 0.3s;">+254 726 547 363</a>
-                        </li>
-                        <li style="margin-bottom: 10px;">
-                            <i class="fas fa-comments" style="color: #e50914; width: 20px;"></i> WhatsApp: +254 726 547 363
+                <div class="footer-card">
+                    <h4>Get In Touch</h4>
+                    <ul class="footer-links">
+                        <li>
+                            <i class="fas fa-phone"></i>
+                            <a href="tel:+254726547363">+254 726 547 363</a>
                         </li>
                         <li>
-                            <i class="fas fa-envelope" style="color: #e50914; width: 20px;"></i>
-                            <a href="mailto:kisiitelevision@gmail.com" style="color: #ccc; text-decoration: none; transition: color 0.3s;">kisiitelevision@gmail.com</a>
+                            <i class="fas fa-comments"></i> WhatsApp: +254 726 547 363
                         </li>
-                    </ul>
-                </div>
-
-                <!-- Quick Links -->
-                <div>
-                    <h4 style="color: #e50914; margin-bottom: 15px; text-transform: uppercase; font-size: 14px; letter-spacing: 1px;">Quick Links</h4>
-                    <ul style="list-style: none; padding: 0; margin: 0; font-size: 13px;">
-                        <li style="margin-bottom: 8px;"><a href="/" style="color: #ccc; text-decoration: none; transition: color 0.3s;">Home</a></li>
-                        <li style="margin-bottom: 8px;"><a href="{% url 'search' %}" style="color: #ccc; text-decoration: none; transition: color 0.3s;">Browse Videos</a></li>
-                        <li style="margin-bottom: 8px;"><a href="{% url 'category' 'news' %}" style="color: #ccc; text-decoration: none; transition: color 0.3s;">Latest News</a></li>
-                        <li><a href="{% url 'category' 'sports' %}" style="color: #ccc; text-decoration: none; transition: color 0.3s;">Sports</a></li>
+                        <li>
+                            <i class="fas fa-envelope"></i>
+                            <a href="mailto:kisiitelevision@gmail.com">kisiitelevision@gmail.com</a>
+                        </li>
                     </ul>
                 </div>
             </div>
 
             <hr class="footer-divider">
-            
-            <!-- Social Media & Copyright -->
-            <div style="text-align: center;">
-                <div style="margin-bottom: 20px;">
-                    <a href="https://www.facebook.com" style="color: #e50914; margin: 0 12px; font-size: 18px; text-decoration: none; transition: color 0.3s;">
-                        <i class="fab fa-facebook-f"></i>
-                    </a>
-                    <a href="https://www.twitter.com" style="color: #e50914; margin: 0 12px; font-size: 18px; text-decoration: none; transition: color 0.3s;">
-                        <i class="fab fa-twitter"></i>
-                    </a>
-                    <a href="https://www.youtube.com" style="color: #e50914; margin: 0 12px; font-size: 18px; text-decoration: none; transition: color 0.3s;">
-                        <i class="fab fa-youtube"></i>
-                    </a>
-                    <a href="https://www.instagram.com" style="color: #e50914; margin: 0 12px; font-size: 18px; text-decoration: none; transition: color 0.3s;">
-                        <i class="fab fa-instagram"></i>
-                    </a>
+
+            <div class="footer-bottom">
+                <div class="footer-socials">
+                    <a href="https://www.facebook.com" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                    <a href="https://www.twitter.com" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                    <a href="https://www.youtube.com" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+                    <a href="https://www.instagram.com" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
                 </div>
-                <p class="copyright">&copy; 2026 Kisii TV (Amandegere Y'omogusii). All rights reserved. | Built with <i class="fas fa-heart" style="color: #e50914;"></i> for Omogusii</p>
+                <p class="copyright">&copy; 2026 Kisii TV (Amandegere Y'omogusii). All rights reserved. | Built with <i class="fas fa-heart"></i> for Omogusii</p>
             </div>
         </div>
     </footer>
