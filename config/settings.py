@@ -4,18 +4,34 @@ Django settings for KISIITV project.
 
 import os
 from pathlib import Path
+from urllib.parse import urlparse
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
+def get_bool_env(name, default=False):
+    return os.getenv(name, str(default)).lower() in {'1', 'true', 'yes', 'on'}
+
+
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-your-secret-key-change-this-in-production'
+SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-change-me')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = get_bool_env('DEBUG', False)
 
-ALLOWED_HOSTS = ['*']
+default_hosts = ['localhost', '127.0.0.1']
+render_host = os.getenv('RENDER_EXTERNAL_HOSTNAME')
+if render_host:
+    default_hosts.append(render_host)
+
+ALLOWED_HOSTS = [host.strip() for host in os.getenv('ALLOWED_HOSTS', ','.join(default_hosts)).split(',') if host.strip()]
+
+csrf_origins = ['http://localhost:8000', 'http://127.0.0.1:8000']
+if render_host:
+    csrf_origins.append(f'https://{render_host}')
+CSRF_TRUSTED_ORIGINS = [origin.strip() for origin in os.getenv('CSRF_TRUSTED_ORIGINS', ','.join(csrf_origins)).split(',') if origin.strip()]
 
 
 # Application definition
@@ -32,7 +48,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -64,12 +80,26 @@ WSGI_APPLICATION = 'config.wsgi.application'
 
 # Database
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+DATABASE_URL = os.getenv('DATABASE_URL')
+if DATABASE_URL:
+    parsed = urlparse(DATABASE_URL)
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': parsed.path.lstrip('/') or 'postgres',
+            'USER': parsed.username or 'postgres',
+            'PASSWORD': parsed.password or '',
+            'HOST': parsed.hostname or 'localhost',
+            'PORT': str(parsed.port or 5432),
+        }
     }
-}
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
+    }
 
 
 # Password validation - ENHANCED SECURITY
@@ -120,6 +150,7 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR / 'static']
 STATIC_ROOT = BASE_DIR / 'staticfiles'
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # Media files (User uploads)
 MEDIA_URL = '/media/'
@@ -173,6 +204,12 @@ MANAGERS = ADMINS
 # Development fallback: console backend when DEBUG is enabled and SMTP settings are not configured.
 if DEBUG and EMAIL_HOST_USER == '' and EMAIL_HOST_PASSWORD == '':
     EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+if not DEBUG:
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+    SECURE_SSL_REDIRECT = get_bool_env('SECURE_SSL_REDIRECT', False)
+    SESSION_COOKIE_SECURE = get_bool_env('SESSION_COOKIE_SECURE', False)
+    CSRF_COOKIE_SECURE = get_bool_env('CSRF_COOKIE_SECURE', False)
 
 # Rate limiting - prevent brute force attacks
 # Login attempts: max 5 per minute per IP

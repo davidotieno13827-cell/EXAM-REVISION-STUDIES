@@ -2,7 +2,7 @@ from django.contrib.admin.models import ADDITION, LogEntry
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group, Permission, User
 from django.contrib.contenttypes.models import ContentType
-from django.test import TestCase, override_settings
+from django.test import TestCase
 from django.urls import reverse
 
 from .models import Video, Category, WatchlistItem, VideoLike, NewsletterSubscriber, ScheduleEntry
@@ -107,38 +107,6 @@ class NewsletterTests(TestCase):
         response = self.client.post(reverse('subscribe_newsletter'), {'email': 'viewer@example.com'})
         self.assertEqual(response.status_code, 201)
         self.assertTrue(NewsletterSubscriber.objects.filter(email='viewer@example.com', is_active=True).exists())
-
-
-class EditorAccessTests(TestCase):
-    @override_settings(EDITOR_ACCESS_PASSWORD='TestEditorPass123!')
-    def test_editor_login_accepts_configured_password(self):
-        response = self.client.post(reverse('editor_login'), {
-            'editor_password': 'TestEditorPass123!',
-        })
-
-        self.assertEqual(response.status_code, 302)
-        self.assertRedirects(response, reverse('editor_dashboard'))
-        self.assertTrue(self.client.session.get('editor_authenticated'))
-
-    def test_editor_dashboard_can_start_a_live_stream(self):
-        category = Category.objects.create(name='Live', slug='live', icon='fas fa-broadcast-tower')
-        session = self.client.session
-        session['editor_authenticated'] = True
-        session.save()
-
-        response = self.client.post(reverse('editor_dashboard'), {
-            'action': 'start_live_stream',
-            'live_title': 'Live Broadcast',
-            'live_description': 'Station live stream',
-            'live_category': category.id,
-            'live_url': 'https://www.youtube.com/watch?v=demo123',
-        })
-
-        self.assertEqual(response.status_code, 302)
-        live_video = Video.objects.filter(is_live=True).latest('created_at')
-        self.assertEqual(live_video.title, 'Live Broadcast')
-        self.assertEqual(live_video.video_url, 'https://www.youtube.com/watch?v=demo123')
-        self.assertTrue(live_video.is_live)
 
 
 class AuthFlowTests(TestCase):

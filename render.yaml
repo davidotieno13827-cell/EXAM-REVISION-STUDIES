@@ -1,7 +1,27 @@
 services:
   - type: web
     name: kisiitv
-    env: docker
-    dockerfilePath: Dockerfile
+    env: python
+    region: oregon
     branch: main
+    buildCommand: "pip install -r requirements.txt && python manage.py collectstatic --noinput"
+    startCommand: "gunicorn config.wsgi:application --bind 0.0.0.0:$PORT"
     plan: free
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.9
+      - key: DEBUG
+        value: false
+      - key: SECRET_KEY
+        generateValue: true
+      - key: ALLOWED_HOSTS
+        value: localhost,127.0.0.1
+      - key: DATABASE_URL
+        fromDatabase:
+          name: kisiitv-db
+          property: connectionString
+
+databases:
+  - name: kisiitv-db
+    databaseName: kisiitv
+    user: kisiitv
