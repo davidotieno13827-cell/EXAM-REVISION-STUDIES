@@ -9,13 +9,13 @@ services:
     plan: free
     envVars:
       - key: PYTHON_VERSION
-        value: 3.11.9
+        value: 3.14.3
       - key: DEBUG
         value: false
       - key: SECRET_KEY
         generateValue: true
       - key: ALLOWED_HOSTS
-        value: localhost,127.0.0.1
+        value: localhost,127.0.0.1,kisiitv.onrender.com
       - key: CSRF_TRUSTED_ORIGINS
         value: https://kisiitv.onrender.com
       - key: DATABASE_URL
