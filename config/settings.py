@@ -27,12 +27,14 @@ if render_host:
     default_hosts.append(render_host)
 
 ALLOWED_HOSTS = [host.strip() for host in os.getenv('ALLOWED_HOSTS', ','.join(default_hosts)).split(',') if host.strip()]
-ALLOWED_HOSTS.extend(['kisiitv.onrender.com', 'www.kisiitv.co.ke', 'kisiitv.co.ke'])
+ALLOWED_HOSTS.extend(['omogusii-co-ke.onrender.com', 'kisiitv.onrender.com', 'www.kisiitv.co.ke', 'kisiitv.co.ke'])
+if render_host and render_host not in ALLOWED_HOSTS:
+    ALLOWED_HOSTS.append(render_host)
 
 csrf_origins = ['http://localhost:8000', 'http://127.0.0.1:8000']
 if render_host:
     csrf_origins.append(f'https://{render_host}')
-csrf_origins.extend(['https://kisiitv.onrender.com', 'https://www.kisiitv.co.ke', 'https://kisiitv.co.ke'])
+csrf_origins.extend(['https://omogusii-co-ke.onrender.com', 'https://kisiitv.onrender.com', 'https://www.kisiitv.co.ke', 'https://kisiitv.co.ke'])
 CSRF_TRUSTED_ORIGINS = [origin.strip() for origin in os.getenv('CSRF_TRUSTED_ORIGINS', ','.join(csrf_origins)).split(',') if origin.strip()]
 
 
