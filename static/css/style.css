@@ -4438,6 +4438,7 @@ body.theme-dark .editor-dashboard .editor-card h4 {
     .header-container {
         flex-wrap: wrap;
         justify-content: space-between;
+        flex-direction: row-reverse;
     }
 
     .nav-menu {
