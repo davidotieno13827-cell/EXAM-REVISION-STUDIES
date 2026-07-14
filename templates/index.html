@@ -1,0 +1,107 @@
+﻿{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="homepage-hero" style="min-height: 240px;">
+    {% if live_videos %}
+    <section style="padding: 24px 5%;">
+        <div style="background: linear-gradient(135deg, #ff4d4d 0%, #ff7a00 100%); border-radius: 12px; padding: 24px; color: #fff; display: flex; flex-direction: column; gap: 12px;">
+            <div style="font-size: 13px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase;">Live Now</div>
+            <h2 style="margin: 0; font-size: 28px;">{{ live_videos.0.title }}</h2>
+            <p style="margin: 0; color: #ffe6e6;">{{ live_videos.0.description|default:"Watch the station live stream now." }}</p>
+            <a href="{% url 'video_detail' live_videos.0.slug %}" style="display: inline-block; width: fit-content; padding: 10px 16px; background: #fff; color: #111; font-weight: 700; border-radius: 6px; text-decoration: none;">Watch Live</a>
+        </div>
+    </section>
+    {% endif %}
+</div>
+
+<section style="padding: 24px 5% 8px;">
+    <h3 style="margin-bottom: 12px;">Now Trending</h3>
+    {% if trending_videos %}
+        <div style="display: grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));">
+            {% for video in trending_videos %}
+                <div style="background: #111; border: 1px solid #2a2a2a; border-radius: 10px; padding: 14px;">
+                    <h4 style="margin: 0 0 6px; font-size: 16px;"><a href="{% url 'video_detail' video.slug %}" style="color: #fff; text-decoration: none;">{{ video.title }}</a></h4>
+                    <p style="margin: 0; color: #aaa; font-size: 14px;">{{ video.description|truncatewords:18 }}</p>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p style="color: #aaa;">No trending videos yet.</p>
+    {% endif %}
+</section>
+
+<section style="padding: 24px 5% 8px;">
+    <h3 style="margin-bottom: 12px;">Featured Player</h3>
+    {% if featured_video %}
+        <div style="background: #111; border: 1px solid #2a2a2a; border-radius: 10px; padding: 16px;">
+            <h4 style="margin: 0 0 8px;">{{ featured_video.title }}</h4>
+            <p style="margin: 0; color: #aaa;">{{ featured_video.description|truncatewords:24 }}</p>
+        </div>
+    {% else %}
+        <p style="color: #aaa;">No featured video yet.</p>
+    {% endif %}
+</section>
+
+<section style="padding: 24px 5% 8px;">
+    <h3 style="margin-bottom: 12px;">Continue Watching</h3>
+    {% if continue_watching_videos %}
+        <div style="display: grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));">
+            {% for video in continue_watching_videos %}
+                <div style="background: #111; border: 1px solid #2a2a2a; border-radius: 10px; padding: 14px;">
+                    <h4 style="margin: 0 0 6px; font-size: 16px;"><a href="{% url 'video_detail' video.slug %}" style="color: #fff; text-decoration: none;">{{ video.title }}</a></h4>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p style="color: #aaa;">Watch a video to start your history.</p>
+    {% endif %}
+</section>
+
+<section style="padding: 24px 5% 8px;">
+    <h3 style="margin-bottom: 12px;">For You</h3>
+    {% if recommended_videos %}
+        <div style="display: grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));">
+            {% for video in recommended_videos %}
+                <div style="background: #111; border: 1px solid #2a2a2a; border-radius: 10px; padding: 14px;">
+                    <h4 style="margin: 0 0 6px; font-size: 16px;"><a href="{% url 'video_detail' video.slug %}" style="color: #fff; text-decoration: none;">{{ video.title }}</a></h4>
+                    <p style="margin: 0; color: #aaa; font-size: 14px;">{{ video.description|truncatewords:18 }}</p>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p style="color: #aaa;">No recommendations yet.</p>
+    {% endif %}
+</section>
+
+<section style="padding: 24px 5% 8px;">
+    <h3 style="margin-bottom: 12px;">Today's Schedule</h3>
+    {% if today_schedule %}
+        <div style="display: grid; gap: 10px;">
+            {% for entry in today_schedule %}
+                <div style="background: #111; border: 1px solid #2a2a2a; border-radius: 10px; padding: 12px 14px; color: #fff;">
+                    <strong>{{ entry.title }}</strong>
+                    <span style="color: #ff7a00;"> — {{ entry.get_status_display }}</span>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p style="color: #aaa;">No schedule entries yet.</p>
+    {% endif %}
+</section>
+
+<section style="padding: 24px 5% 40px;">
+    <h3 style="margin-bottom: 12px;">Recommended for You</h3>
+    {% if recommended_videos %}
+        <div style="display: grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));">
+            {% for video in recommended_videos %}
+                <div style="background: #111; border: 1px solid #2a2a2a; border-radius: 10px; padding: 14px;">
+                    <h4 style="margin: 0 0 6px; font-size: 16px;"><a href="{% url 'video_detail' video.slug %}" style="color: #fff; text-decoration: none;">{{ video.title }}</a></h4>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p style="color: #aaa;">No recommendations yet.</p>
+    {% endif %}
+</section>
+{% endblock content %}

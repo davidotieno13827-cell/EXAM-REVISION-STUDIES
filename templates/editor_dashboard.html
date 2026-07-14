@@ -1,0 +1,258 @@
+{% extends 'base.html' %}
+{% block title %}Editorial Dashboard | Kisii TV{% endblock %}
+{% block content %}
+<section class="editor-dashboard">
+    <div class="content-grid-section">
+        <div class="editor-card">
+            <h3>Editorial Dashboard</h3>
+            <p>Use this page to add news videos, toggle live/featured status, and publish schedule entries without developer intervention.</p>
+
+            {% if message %}
+                <div class="success-message">{{ message }}</div>
+            {% endif %}
+
+            <div class="editor-dashboard__form-grid">
+                <form id="create-video-form" method="POST" class="editor-card editor-card--form">
+                    {% csrf_token %}
+                    <input type="hidden" name="action" value="create_video">
+                    <h4>Create New Video</h4>
+
+                    <label for="title">Title</label>
+                    <input id="title" name="title" type="text" placeholder="Video title" required>
+
+                    <label for="slug">Slug (optional)</label>
+                    <input id="slug" name="slug" type="text" placeholder="custom-video-slug">
+
+                    <label for="description">Description</label>
+                    <textarea id="description" name="description" placeholder="Brief video description"></textarea>
+
+                    <label for="category">Category</label>
+                    <select id="category" name="category" required>
+                        <option value="">Choose a category</option>
+                        {% for category in categories %}
+                        <option value="{{ category.id }}">{{ category.name }}</option>
+                        {% endfor %}
+                    </select>
+
+                    <label for="video_url">Video URL</label>
+                    <input id="video_url" name="video_url" type="url" placeholder="https://www.youtube.com/watch?v=..." required>
+
+                    <label for="duration">Duration (seconds)</label>
+                    <input id="duration" name="duration" type="number" min="0" placeholder="1200">
+
+                    <div class="editor-dashboard__checkboxes">
+                        <label>
+                            <input type="checkbox" name="is_featured">
+                            Mark as featured
+                        </label>
+                        <label>
+                            <input type="checkbox" name="is_live">
+                            Mark as live
+                        </label>
+                    </div>
+
+                    <div class="editor-actions">
+                        <button type="submit">Add Video</button>
+                    </div>
+                </form>
+
+                <form id="create-schedule-form" method="POST" class="editor-card editor-card--form">
+                    {% csrf_token %}
+                    <input type="hidden" name="action" value="create_schedule">
+                    <h4>Add Schedule Entry</h4>
+
+                    <label for="schedule_title">Program Title</label>
+                    <input id="schedule_title" name="schedule_title" type="text" placeholder="Program title" required>
+
+                    <label for="schedule_category">Category</label>
+                    <select id="schedule_category" name="schedule_category" required>
+                        <option value="">Choose a category</option>
+                        {% for category in categories %}
+                        <option value="{{ category.id }}">{{ category.name }}</option>
+                        {% endfor %}
+                    </select>
+
+                    <label for="start_time">Start Time</label>
+                    <input id="start_time" name="start_time" type="time" required>
+
+                    <label for="duration_minutes">Duration (minutes)</label>
+                    <input id="duration_minutes" name="duration_minutes" type="number" min="1" placeholder="30">
+
+                    <label for="status">Status</label>
+                    <select id="status" name="status">
+                        <option value="coming_soon">Coming Soon</option>
+                        <option value="up_next">Up Next</option>
+                        <option value="live">Live Now</option>
+                    </select>
+
+                    <div class="editor-actions">
+                        <button type="submit">Add Schedule</button>
+                    </div>
+                </form>
+
+                <form id="start-live-form" method="POST" class="editor-card editor-card--form">
+                    {% csrf_token %}
+                    <input type="hidden" name="action" value="start_live_stream">
+                    <h4>Start Live Stream</h4>
+
+                    <label for="live_title">Stream Title</label>
+                    <input id="live_title" name="live_title" type="text" placeholder="Live broadcast title" required>
+
+                    <label for="live_description">Description</label>
+                    <textarea id="live_description" name="live_description" placeholder="Describe the live broadcast"></textarea>
+
+                    <label for="live_category">Category</label>
+                    <select id="live_category" name="live_category" required>
+                        <option value="">Choose a category</option>
+                        {% for category in categories %}
+                        <option value="{{ category.id }}">{{ category.name }}</option>
+                        {% endfor %}
+                    </select>
+
+                    <label for="live_url">Stream URL</label>
+                    <input id="live_url" name="live_url" type="url" placeholder="https://www.youtube.com/watch?v=..." required>
+
+                    <div class="editor-actions">
+                        <button type="submit">Start Stream</button>
+                    </div>
+                </form>
+
+                <form id="create-news-form" method="POST" enctype="multipart/form-data" class="editor-card editor-card--form">
+                    {% csrf_token %}
+                    <input type="hidden" name="action" value="create_news">
+                    <h4>Add News Update</h4>
+
+                    <label for="news_title">Headline</label>
+                    <input id="news_title" name="news_title" type="text" placeholder="News headline" required>
+
+                    <label for="news_slug">Slug (optional)</label>
+                    <input id="news_slug" name="news_slug" type="text" placeholder="custom-news-slug">
+
+                    <label for="news_description">Description</label>
+                    <textarea id="news_description" name="news_description" placeholder="Article summary or news update"></textarea>
+
+                    <label for="news_category">Category</label>
+                    <select id="news_category" name="news_category" required>
+                        <option value="">Choose a category</option>
+                        {% for category in categories %}
+                        <option value="{{ category.id }}">{{ category.name }}</option>
+                        {% endfor %}
+                    </select>
+
+                    <label for="news_thumbnail">News Image</label>
+                    <input id="news_thumbnail" name="news_thumbnail" type="file" accept="image/*" required>
+
+                    <label for="news_video_url">Optional Video URL</label>
+                    <input id="news_video_url" name="news_video_url" type="url" placeholder="Optional related video URL">
+
+                    <label for="news_duration">Duration (seconds)</label>
+                    <input id="news_duration" name="news_duration" type="number" min="0" placeholder="0">
+
+                    <div class="editor-dashboard__checkboxes">
+                        <label>
+                            <input type="checkbox" name="news_is_featured">
+                            Feature this update
+                        </label>
+                    </div>
+
+                    <div class="editor-actions">
+                        <button type="submit">Add News Update</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="editor-card">
+            <div class="editor-card__header">
+                <h3>Manage Existing Videos</h3>
+                <a href="#create-video-form" class="section-add-btn">+ Add Video</a>
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Title</th>
+                        <th>Category</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for video in videos %}
+                    <tr>
+                        <td>{{ video.title }}</td>
+                        <td>{{ video.category.name }}</td>
+                        <td>
+                            <span class="status-badge">{% if video.is_live %}Live{% elif video.is_featured %}Featured{% else %}Normal{% endif %}</span>
+                        </td>
+                        <td>
+                            <form method="POST" style="display:inline-block; margin-right: 8px;">
+                                {% csrf_token %}
+                                <input type="hidden" name="action" value="toggle_live">
+                                <input type="hidden" name="slug" value="{{ video.slug }}">
+                                <button type="submit">{% if video.is_live %}Stop Live{% else %}Go Live{% endif %}</button>
+                            </form>
+                            <form method="POST" style="display:inline-block; margin-right: 8px;">
+                                {% csrf_token %}
+                                <input type="hidden" name="action" value="toggle_featured">
+                                <input type="hidden" name="slug" value="{{ video.slug }}">
+                                <button type="submit">{% if video.is_featured %}Unfeature{% else %}Feature{% endif %}</button>
+                            </form>
+                            <form method="POST" style="display:inline-block;">
+                                {% csrf_token %}
+                                <input type="hidden" name="action" value="delete_video">
+                                <input type="hidden" name="slug" value="{{ video.slug }}">
+                                <button type="submit" class="delete-button">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="4" style="color: #aaa;">No videos found.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <div class="editor-card">
+            <div class="editor-card__header">
+                <h3>Current Schedule</h3>
+                <a href="#create-schedule-form" class="section-add-btn">+ Add Schedule</a>
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Time</th>
+                        <th>Title</th>
+                        <th>Category</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for entry in schedule_entries %}
+                    <tr>
+                        <td>{{ entry.start_time }}</td>
+                        <td>{{ entry.title }}</td>
+                        <td>{{ entry.category.name }}</td>
+                        <td><span class="status-badge">{{ entry.get_status_display }}</span></td>
+                        <td>
+                            <form method="POST" style="display:inline-block;">
+                                {% csrf_token %}
+                                <input type="hidden" name="action" value="delete_schedule">
+                                <input type="hidden" name="entry_id" value="{{ entry.id }}">
+                                <button type="submit" class="delete-button">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="5" style="color: #aaa;">No schedule entries found.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+{% endblock %}

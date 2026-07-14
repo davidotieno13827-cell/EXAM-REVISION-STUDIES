@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+    <!-- Newsletter signup removed -->
+    <!-- FAQ Section -->
+    <section class="content-grid-section" style="background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);">
+        <h2 style="text-align: center; border: none; padding: 0; margin-bottom: 30px; font-size: 32px;">
+            <i class="fas fa-question-circle" style="margin-right: 12px; color: var(--brand-primary);"></i>Frequently Asked Questions
+        </h2>
+        
+        <div style="max-width: 800px; margin: 0 auto; display: grid; gap: 15px;">
+            <details style="background: #1c1c1c; padding: 20px; border-radius: 6px; border-left: 4px solid var(--brand-primary); cursor: pointer;">
+                <summary style="color: #fff; font-weight: 600; font-size: 15px; user-select: none;">
+                    How can I watch Kisii TV live?
+                </summary>
+                <p style="color: #ccc; margin-top: 15px; margin-bottom: 0; line-height: 1.6;">
+                    You can watch Kisii TV live on this website, on Zuku Channel 33, GOtv Channel 810, and StarTimes Channel 619. Use the "Watch Live Now" button to access our live stream.
+                </p>
+            </details>
+
+            <details style="background: #1c1c1c; padding: 20px; border-radius: 6px; border-left: 4px solid var(--brand-primary); cursor: pointer;">
+                <summary style="color: #fff; font-weight: 600; font-size: 15px; user-select: none;">
+                    Are there any costs to use this platform?
+                </summary>
+                <p style="color: #ccc; margin-top: 15px; margin-bottom: 0; line-height: 1.6;">
+                    No! Kisii TV streaming is completely free. You can watch all our content without any subscription fees.
+                </p>
+            </details>
+
+            <details style="background: #1c1c1c; padding: 20px; border-radius: 6px; border-left: 4px solid var(--brand-primary); cursor: pointer;">
+                <summary style="color: #fff; font-weight: 600; font-size: 15px; user-select: none;">
+                    How can I contact Kisii TV?
+                </summary>
+                <p style="color: #ccc; margin-top: 15px; margin-bottom: 0; line-height: 1.6;">
+                    You can reach us via WhatsApp, M-Pesa, or call +254 726 547 363. Email us at kisiitelevision@gmail.com.
+                </p>
+            </details>
+
+            <details style="background: #1c1c1c; padding: 20px; border-radius: 6px; border-left: 4px solid var(--brand-primary); cursor: pointer;">
+                <summary style="color: #fff; font-weight: 600; font-size: 15px; user-select: none;">
+                    Can I download videos to watch offline?
+                </summary>
+                <p style="color: #ccc; margin-top: 15px; margin-bottom: 0; line-height: 1.6;">
+                    Currently, downloads are not available. However, you can stream our content anytime from any device with internet access.
+                </p>
+            </details>
+        </div>
+    </section>
+
+    <style>
+        details summary {
+            outline: none;
+        }
+
+        details[open] summary {
+            color: var(--brand-primary);
+        }
+
+        details[open] {
+            border-left-color: #fff !important;
+        }
+
+        details summary::-webkit-details-marker {
+            display: none;
+        }
+
+        details summary::before {
+            content: '▶ ';
+            color: var(--brand-primary);
+            margin-right: 10px;
+            transition: transform 0.3s;
+        }
+
+        details[open] summary::before {
+            transform: rotate(90deg);
+        }
+    </style>
+
+    <!-- Newsletter script removed -->
+{% endblock %}

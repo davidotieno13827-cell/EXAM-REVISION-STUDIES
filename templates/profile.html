@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="profile-container" style="padding: 40px 5%;">
+	<div class="profile-header" style="max-width: 980px; margin: 0 auto 24px;">
+		<h1 style="margin:0; font-size:32px; font-weight:800;">Welcome, {{ user.username }}</h1>
+		<p style="color:#bbb; margin-top:8px;">This is your personal dashboard. Choose where to go next.</p>
+	</div>
+
+	<div class="profile-actions" style="max-width:980px; margin:0 auto; display:grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap:16px;">
+		<a href="{% url 'watchlist' %}" class="card" style="display:block; background:#1c1c1c; padding:18px; border-radius:10px; border:1px solid #2a2a2a; text-decoration:none; color:#fff;">
+			<h3 style="margin:0 0 8px;">My Watchlist</h3>
+			<p style="margin:0; color:#999;">See videos you've saved to watch later.</p>
+		</a>
+
+		<a href="{% url 'home' %}" class="card" style="display:block; background:#1c1c1c; padding:18px; border-radius:10px; border:1px solid #2a2a2a; text-decoration:none; color:#fff;">
+			<h3 style="margin:0 0 8px;">Explore Videos</h3>
+			<p style="margin:0; color:#999;">Browse the latest and featured videos on Kisii TV.</p>
+		</a>
+
+		<a href="{% url 'logout' %}" class="card" style="display:block; background:#1c1c1c; padding:18px; border-radius:10px; border:1px solid #2a2a2a; text-decoration:none; color:#fff;">
+			<h3 style="margin:0 0 8px;">Sign Out</h3>
+			<p style="margin:0; color:#999;">Sign out of your account securely.</p>
+		</a>
+
+		{% if user.is_staff %}
+		<a href="{% url 'editor_dashboard' %}" class="card" style="display:block; background:#1c1c1c; padding:18px; border-radius:10px; border:1px solid #2a2a2a; text-decoration:none; color:#fff;">
+			<h3 style="margin:0 0 8px;">Editorial Dashboard</h3>
+			<p style="margin:0; color:#999;">Manage broadcasts, news and schedule entries.</p>
+		</a>
+		{% endif %}
+	</div>
+</div>
+
+{% endblock %}

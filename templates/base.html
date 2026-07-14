@@ -1,0 +1,155 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Kisii TV - Omogusii's #1 National Broadcaster. Watch live news, sports, entertainment, and more 24/7 online.">
+    <meta name="keywords" content="Kisii TV, Amandegere Y'omogusii, television, streaming, news, sports, entertainment, Kenya">
+    <meta name="author" content="Kisii TV">
+    <meta name="theme-color" content="var(--brand-primary)">
+    <meta property="og:title" content="Kisii TV | Amandegere Y'omogusii">
+    <meta property="og:description" content="Omogusii's number 1 national broadcaster. Live streaming 24/7 - News, Sports, Entertainment, and more.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="http://127.0.0.1:8000/">
+    <meta property="og:image" content="{% static 'img/og-image.jpg' %}">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Kisii TV | Amandegere Y'omogusii">
+    <meta name="twitter:description" content="Omogusii's number 1 national broadcaster. Live streaming 24/7">
+    <title>{% block title %}Kisii TV | Amandegere Y'omogusii - Live Streaming{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}?v=3">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="canonical" href="http://127.0.0.1:8000/">
+    <link rel="icon" type="image/x-icon" href="{% static 'img/favicon.ico' %}">
+</head>
+<body class="has-logo-bg">
+
+    <!-- Floating Social Icons -->
+    <div class="floating-socials">
+        <a href="https://www.facebook.com" target="_blank" class="social-icon" title="Follow on Facebook" aria-label="Follow on Facebook">
+            <i class="fab fa-facebook-f" aria-hidden="true"></i>
+            <span class="sr-only">Follow on Facebook</span>
+        </a>
+        <a href="https://www.twitter.com" target="_blank" class="social-icon" title="Follow on Twitter" aria-label="Follow on Twitter">
+            <i class="fab fa-twitter" aria-hidden="true"></i>
+            <span class="sr-only">Follow on Twitter</span>
+        </a>
+        <a href="https://www.youtube.com" target="_blank" class="social-icon" title="Subscribe on YouTube" aria-label="Subscribe on YouTube">
+            <i class="fab fa-youtube" aria-hidden="true"></i>
+            <span class="sr-only">Subscribe on YouTube</span>
+        </a>
+    </div>
+
+    <!-- Back to Top Button -->
+    <div class="back-to-top" id="backToTop" title="Back to Top" role="button" aria-label="Back to top">
+        <i class="fas fa-arrow-up" aria-hidden="true"></i>
+        <span class="sr-only">Back to top</span>
+    </div>
+
+    <!-- Top Navigation Bar -->
+    <header class="main-header">
+        <div class="header-container">
+            <div class="logo logo-badge">
+                <a href="/">
+                    <img src="{% static 'kisiitvlogo.webp' %}" alt="Kisii TV" class="header-logo">
+                </a>
+            </div>
+
+            <div class="header-center">
+                <a href="{% url 'search' %}" class="header-search-btn" title="Search" aria-label="Search videos">
+                    <i class="fas fa-search"></i>
+                </a>
+            </div>
+
+            <div class="header-right">
+                <a href="{% url 'auth_choice' %}" class="header-signin-btn" title="Sign In" aria-label="Sign in">
+                    <i class="fas fa-user"></i>
+                    <span>Sign In</span>
+                </a>
+            </div>
+        </div>
+
+        <!-- Secondary Navigation Menu -->
+        <nav class="secondary-nav">
+            <ul class="secondary-nav-menu">
+                <li><a href="/">Home</a></li>
+                <li><a href="/category/news/">News</a></li>
+                <li><a href="/#tv">TV</a></li>
+                <li><a href="/#live-events">Live Events</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    {% if messages %}
+    <div style="max-width:1100px; margin: 20px auto 0; padding: 16px 20px; border-radius: 10px; background: #e6ffed; border: 1px solid #7dd48b; color: #064e3b; display: flex; align-items: center; gap: 12px; font-weight: 600;">
+        <i class="fas fa-check-circle" aria-hidden="true" style="font-size: 1.2rem;"></i>
+        <div>
+            {% for message in messages %}
+                {{ message }}
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Dynamic Content Area -->
+    <main class="content-area">
+        {% block content %}
+        {% endblock content %}
+    </main>
+
+    <!-- Global Footer with Real Broadcast & Contact Details -->
+    <footer class="main-footer">
+        <div class="footer-container">
+            <div class="footer-grid">
+                <div class="footer-card">
+                    <h4>About Kisii TV</h4>
+                    <p>Kisii TV (Amandegere Y'omogusii) is Omogusii's number 1 national broadcaster. Broadcasting 24/7 with quality content that matters.</p>
+                </div>
+
+                <div class="footer-card">
+                    <h4>Watch On</h4>
+                    <ul class="footer-links">
+                        <li><i class="fas fa-tv"></i> Zuku Channel 33</li>
+                        <li><i class="fas fa-tv"></i> GOtv Channel 810</li>
+                        <li><i class="fas fa-tv"></i> StarTimes Channel 619</li>
+                        <li><i class="fas fa-globe"></i> Online (This Website)</li>
+                    </ul>
+                </div>
+
+                <div class="footer-card">
+                    <h4>Get In Touch</h4>
+                    <ul class="footer-links">
+                        <li>
+                            <i class="fas fa-phone"></i>
+                            <a href="tel:+254726547363">+254 726 547 363</a>
+                        </li>
+                        <li>
+                            <i class="fas fa-comments"></i> WhatsApp: +254 726 547 363
+                        </li>
+                        <li>
+                            <i class="fas fa-envelope"></i>
+                            <a href="mailto:kisiitelevision@gmail.com">kisiitelevision@gmail.com</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <hr class="footer-divider">
+
+            <div class="footer-bottom">
+                <div class="footer-socials">
+                    <a href="https://www.facebook.com" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                    <a href="https://www.twitter.com" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                    <a href="https://www.youtube.com" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+                    <a href="https://www.instagram.com" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                </div>
+                <p class="copyright">&copy; 2026 Kisii TV (Amandegere Y'omogusii). All rights reserved. | Built with <i class="fas fa-heart"></i> for Omogusii</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="{% static 'js/main.js' %}"></script>
+
+</body>
+</html>

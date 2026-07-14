@@ -1,0 +1,146 @@
+{% extends "admin/base_site.html" %}
+{% load i18n admin_urls static %}
+
+{% block extrahead %}
+<style>
+  .dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+    margin: 20px 0;
+  }
+  .stat-card {
+    background: #f8f9fa;
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  }
+  .stat-card h3 {
+    margin: 0 0 10px 0;
+    font-size: 14px;
+    color: #666;
+    font-weight: 500;
+  }
+  .stat-card .number {
+    font-size: 32px;
+    font-weight: bold;
+    color: #444;
+  }
+  .stat-card.highlight {
+    border-left: 4px solid #007bff;
+    background: #e9f2ff;
+  }
+  .stat-card.pending {
+    border-left: 4px solid #dc3545;
+  }
+  .stat-card.live {
+    border-left: 4px solid #28a745;
+  }
+  .quick-links {
+    margin: 30px 0;
+  }
+  .quick-links h2 {
+    margin-top: 0;
+  }
+  .module-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 10px;
+  }
+  .module-list a {
+    display: block;
+    padding: 12px 15px;
+    background: #f8f9fa;
+    border: 1px solid #e9ecef;
+    border-radius: 4px;
+    text-decoration: none;
+    color: #0066cc;
+    text-align: center;
+    transition: all 0.2s;
+  }
+  .module-list a:hover {
+    background: #e9ecef;
+    border-color: #dee2e6;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div id="content-main">
+  <h1>{% trans 'Content Management Dashboard' %}</h1>
+
+  {% if stats %}
+  <div class="dashboard-grid">
+    <div class="stat-card highlight">
+      <h3>Total Users</h3>
+      <div class="number">{{ stats.total_users }}</div>
+    </div>
+    <div class="stat-card">
+      <h3>Total Videos</h3>
+      <div class="number">{{ stats.total_videos }}</div>
+    </div>
+    <div class="stat-card live">
+      <h3>Live Videos</h3>
+      <div class="number">{{ stats.videos_live }}</div>
+    </div>
+    <div class="stat-card">
+      <h3>Featured Videos</h3>
+      <div class="number">{{ stats.featured_videos }}</div>
+    </div>
+    <div class="stat-card">
+      <h3>Total Comments</h3>
+      <div class="number">{{ stats.total_comments }}</div>
+    </div>
+    <div class="stat-card pending">
+      <h3>Pending Comments</h3>
+      <div class="number">{{ stats.pending_comments }}</div>
+    </div>
+    <div class="stat-card">
+      <h3>Categories</h3>
+      <div class="number">{{ stats.total_categories }}</div>
+    </div>
+    <div class="stat-card">
+      <h3>Scheduled Programs</h3>
+      <div class="number">{{ stats.scheduled_programs }}</div>
+    </div>
+    <div class="stat-card">
+      <h3>Newsletter Subscribers</h3>
+      <div class="number">{{ stats.newsletter_subscribers }}</div>
+    </div>
+  </div>
+  {% endif %}
+
+  <div class="quick-links">
+    <h2>{% trans 'Quick Links' %}</h2>
+    <div class="module-list">
+      <a href="{% url 'kisii_admin:content_video_changelist' %}">📺 Manage Videos</a>
+      <a href="{% url 'kisii_admin:content_scheduleentry_changelist' %}">📅 View Schedule</a>
+      <a href="{% url 'kisii_admin:content_comment_changelist' %}">💬 Review Comments</a>
+      <a href="{% url 'kisii_admin:content_newslettersubscriber_changelist' %}">📧 Email Subscribers</a>
+      <a href="{% url 'kisii_admin:content_category_changelist' %}">🏷️ Categories</a>
+    </div>
+  </div>
+
+  {% if app_list %}
+  <h2>{% trans 'Administration' %}</h2>
+  {% for app in app_list %}
+    <div class="app-block">
+      <h3>{{ app.name }}</h3>
+      <ul>
+      {% for model in app.models %}
+        <li>
+          {% if model.admin_url %}
+            <a href="{{ model.admin_url }}">{{ model.name }}</a>
+          {% else %}
+            <span>{{ model.name }}</span>
+          {% endif %}
+        </li>
+      {% endfor %}
+      </ul>
+    </div>
+  {% endfor %}
+  {% endif %}
+</div>
+{% endblock %}

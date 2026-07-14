@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+    <section class="content-grid-section">
+        {% if category.slug == 'news' %}
+            <div class="news-page-shell">
+                <div class="news-page-header">
+                    <div>
+                        <p class="news-page-kicker">Kisii TV newsroom</p>
+                        <h2>Explore {{ category.name }}</h2>
+                        <p>Browse the latest stories, live coverage, and featured sections in one polished newsroom view.</p>
+                    </div>
+                    <div class="news-page-highlights">
+                        <span class="news-page-pill">Live updates</span>
+                        <span class="news-page-pill">Trending stories</span>
+                        <span class="news-page-pill">Community voices</span>
+                    </div>
+                </div>
+
+                <div class="categories-grid news-categories-grid">
+                    {% for cat in categories %}
+                        {% if cat.id != category.id %}
+                        <a href="{% url 'category' cat.slug %}" class="category-card" style="text-decoration: none; color: inherit;">
+                            <div class="category-icon">
+                                {% if cat.icon %}
+                                    <i class="{{ cat.icon }}"></i>
+                                {% else %}
+                                    📺
+                                {% endif %}
+                            </div>
+                            <div class="category-name">{{ cat.name }}</div>
+                            <div class="category-meta">{{ cat.videos.count }} videos</div>
+                        </a>
+                        {% endif %}
+                    {% endfor %}
+                    <div class="category-card" style="text-decoration: none; color: inherit;">
+                        <div class="category-icon">🎮</div>
+                        <div class="category-name">Games</div>
+                        <div class="category-meta">0 videos</div>
+                    </div>
+                    <div class="category-card" style="text-decoration: none; color: inherit;">
+                        <div class="category-icon">✨</div>
+                        <div class="category-name">Lifestyle</div>
+                        <div class="category-meta">0 videos</div>
+                    </div>
+                    <div class="category-card" style="text-decoration: none; color: inherit;">
+                        <div class="category-icon">📅</div>
+                        <div class="category-name">Live Events</div>
+                        <div class="category-meta">0 videos</div>
+                    </div>
+                    <div class="category-card" style="text-decoration: none; color: inherit;">
+                        <div class="category-icon">✍️</div>
+                        <div class="category-name">Opinion & Blogs</div>
+                        <div class="category-meta">0 videos</div>
+                    </div>
+                </div>
+            </div>
+        {% else %}
+            <div class="categories-grid">
+                {% for cat in categories %}
+                    {% if cat.id != category.id %}
+                    <a href="{% url 'category' cat.slug %}" class="category-card" style="text-decoration: none; color: inherit;">
+                        <div class="category-icon">
+                            {% if cat.icon %}
+                                <i class="{{ cat.icon }}"></i>
+                            {% else %}
+                                📺
+                            {% endif %}
+                        </div>
+                        <div class="category-name">{{ cat.name }}</div>
+                        <div class="category-meta">{{ cat.videos.count }} videos</div>
+                    </a>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        {% endif %}
+    </section>
+{% endblock %}

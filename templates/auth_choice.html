@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<section class="content-grid-section" style="padding: 64px 5%; min-height: 320px; display:flex; align-items:center; justify-content:center;">
+    <div style="max-width:720px; width:100%; text-align:center;">
+        <h2 style="margin-bottom:8px;">Welcome to Kisii TV</h2>
+        <p style="color:#bbb; margin-bottom:32px;">Sign in as a viewer to access your saved videos, likes, and profile.</p>
+
+        <div style="display:flex; justify-content:center; margin-bottom:24px; flex-wrap: wrap; gap: 16px;">
+            <div style="width:100%; max-width:720px; border: 2px solid #1e40af; border-radius: 12px; padding: 32px; background: #0f1729; text-align:left;">
+                <h3 style="margin-top:0; margin-bottom:12px; color:#fff;">Sign in to Kisii TV</h3>
+                <p style="color:#aaa; margin-bottom:24px; font-size:14px;">Choose the option that matches how you want to access the site.</p>
+                <div style="display:grid; gap:14px;">
+                    <a href="{% url 'login' %}" class="btn-secondary" style="padding:14px 22px; font-weight:700; display:block; background:#10b981; color:#000; text-align:center;">Sign In</a>
+                    <a href="{% url 'register' %}" class="btn-secondary" style="padding:14px 22px; font-weight:700; display:block; background:#2563eb; color:#fff; text-align:center;">Create Account</a>
+                    <a href="{% url 'admin_login' %}" class="btn-secondary" style="padding:14px 22px; font-weight:700; display:block; background:#7c3aed; color:#fff; text-align:center;">Login as Admin</a>
+                    <a href="{% url 'editor_login' %}" class="btn-secondary" style="padding:14px 22px; font-weight:700; display:block; background:#f59e0b; color:#000; text-align:center;">Login as Editor</a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</section>
+{% endblock %}
