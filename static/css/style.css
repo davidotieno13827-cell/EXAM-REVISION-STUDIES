@@ -907,8 +907,8 @@ body.theme-light .schedule-panel {
     font-size: 14px;
 }
 
-/* Ensure header-center doesn't overlap on very small screens */
-@media (max-width: 360px) {
+/* Ensure header-center doesn't overlap on small screens */
+@media (max-width: 480px) {
     .header-center {
         position: static;
         transform: none;
@@ -917,6 +917,15 @@ body.theme-light .schedule-panel {
 
     .header-container {
         justify-content: space-between;
+        align-items: center;
+    }
+
+    .logo-badge {
+        padding: 10px 12px;
+    }
+
+    .header-logo {
+        height: 34px;
     }
 }
 
