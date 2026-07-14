@@ -1001,12 +1001,12 @@ body.theme-light .schedule-panel {
     .header-container {
         gap: 6px;
         padding: 10px 8px;
+        flex-direction: row-reverse;
     }
 
     .logo-badge {
         flex-shrink: 0;
         padding: 8px 10px;
-        order: 3;
     }
 
     .header-logo {
@@ -1016,7 +1016,6 @@ body.theme-light .schedule-panel {
     .header-center {
         flex-grow: 1;
         justify-content: center;
-        order: 1;
     }
 
     .header-search-btn {
@@ -1027,7 +1026,6 @@ body.theme-light .schedule-panel {
 
     .header-right {
         flex-shrink: 0;
-        order: 2;
     }
 
     .header-signin-btn {
