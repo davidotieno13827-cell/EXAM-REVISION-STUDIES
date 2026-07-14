@@ -731,6 +731,53 @@ body.theme-light .schedule-panel {
         gap: 8px;
     }
 
+    /* Header re-ordering on small screens: keep actions grouped, logo on left */
+    .header-container {
+        justify-content: space-between;
+        padding: 10px var(--page-pad);
+    }
+
+    .logo {
+        order: 0;
+        /* keep logo on the left */
+    }
+
+    /* Compact action buttons and logo on small devices */
+    .header-search-btn {
+        padding: 8px;
+        min-width: 40px;
+        justify-content: center;
+    }
+
+    .header-signin-btn span {
+        display: none;
+        /* show icon only */
+    }
+
+    .header-logo {
+        height: 34px;
+    }
+
+    .main-header {
+        z-index: 40;
+    }
+
+    .secondary-nav-menu {
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+
+    .header-right {
+        order: 1;
+        /* show actions (search/sign-in) before the logo */
+        gap: 8px;
+    }
+
+    .header-status-pill {
+        display: none;
+        /* hide live pill on narrow screens to save space */
+    }
+
     /* Trending and schedule: make horizontally scrollable and readable */
     .trending-live-bar {
         overflow-x: auto;
@@ -779,6 +826,191 @@ body.theme-light .schedule-panel {
     .section-pill,
     .preview-modal-close {
         padding: 12px;
+    }
+}
+
+/* Header layout and responsive tweaks */
+.main-header {
+    position: relative;
+    background: var(--header-bg);
+    border-bottom: 1px solid var(--brand-border);
+}
+
+.header-container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 14px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+}
+
+.header-logo {
+    height: 40px;
+    width: auto;
+    display: block;
+}
+
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.header-center {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    pointer-events: auto;
+}
+
+.header-status-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 10px;
+    border-radius: 999px;
+    background: rgba(200, 16, 46, 0.08);
+    color: var(--brand-primary);
+    font-size: 13px;
+}
+
+.header-search-btn,
+.header-signin-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    border-radius: 10px;
+    text-decoration: none;
+    color: var(--brand-dark);
+    background: transparent;
+    border: 1px solid rgba(0, 0, 0, 0.04);
+}
+
+.header-search-btn i,
+.header-signin-btn i {
+    font-size: 16px;
+}
+
+.header-signin-btn span {
+    font-weight: 700;
+    font-size: 14px;
+}
+
+/* Ensure header-center doesn't overlap on very small screens */
+@media (max-width: 360px) {
+    .header-center {
+        position: static;
+        transform: none;
+        margin: 0 8px;
+    }
+
+    .header-container {
+        justify-content: space-between;
+    }
+}
+
+/* Secondary nav sits below header and is scrollable on small screens */
+.secondary-nav {
+    border-top: 1px solid rgba(0, 0, 0, 0.03);
+    background: transparent;
+}
+
+.secondary-nav-menu {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 8px 20px;
+    display: flex;
+    gap: 12px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+.secondary-nav-menu a {
+    white-space: nowrap;
+    padding: 8px 10px;
+    border-radius: 8px;
+    color: var(--brand-muted);
+    text-decoration: none;
+}
+
+.secondary-nav-menu a:hover {
+    color: var(--brand-dark);
+}
+
+/* Logo badge and action styles to match provided design */
+.logo-badge {
+    background: #ffffff;
+    padding: 12px 14px;
+    border-radius: 14px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 12px 34px rgba(2, 6, 23, 0.14);
+}
+
+.header-search-btn {
+    border: 2px solid rgba(255, 255, 255, 0.85);
+    background: rgba(255, 255, 255, 0.03);
+    color: var(--brand-primary);
+    border-radius: 999px;
+    padding: 8px 10px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 44px;
+    height: 44px;
+}
+
+.header-signin-btn {
+    border: 2px solid rgba(255, 255, 255, 0.95);
+    background: var(--brand-primary);
+    color: #ffffff;
+    padding: 8px 14px;
+    border-radius: 999px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 800;
+    box-shadow: 0 6px 18px rgba(200, 16, 46, 0.16);
+}
+
+/* Ensure header elements stay on one line and don't overlap */
+.header-container {
+    flex-wrap: nowrap;
+    gap: 8px;
+    padding-left: 18px;
+    padding-right: 18px;
+}
+
+@media (max-width: 480px) {
+    .header-search-btn {
+        padding: 8px;
+        min-width: 40px;
+        height: 40px;
+    }
+
+    .header-signin-btn span {
+        display: none;
+        /* keep icon-only on very small screens */
+    }
+
+    .logo-badge {
+        padding: 10px 12px;
+    }
+
+    .header-logo {
+        height: 40px;
     }
 }
 
