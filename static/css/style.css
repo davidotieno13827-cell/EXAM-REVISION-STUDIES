@@ -749,11 +749,6 @@ body.theme-light .schedule-panel {
         justify-content: center;
     }
 
-    .header-signin-btn span {
-        display: none;
-        /* show icon only */
-    }
-
     .header-logo {
         height: 34px;
     }
@@ -1003,23 +998,43 @@ body.theme-light .schedule-panel {
 }
 
 @media (max-width: 480px) {
-    .header-search-btn {
-        padding: 8px;
-        min-width: 40px;
-        height: 40px;
-    }
-
-    .header-signin-btn span {
-        display: none;
-        /* keep icon-only on very small screens */
+    .header-container {
+        gap: 6px;
+        padding: 10px 8px;
     }
 
     .logo-badge {
-        padding: 10px 12px;
+        flex-shrink: 0;
+        padding: 8px 10px;
     }
 
     .header-logo {
-        height: 40px;
+        height: 32px;
+    }
+
+    .header-center {
+        flex-grow: 1;
+        justify-content: center;
+    }
+
+    .header-search-btn {
+        padding: 8px 10px;
+        min-width: auto;
+        height: auto;
+    }
+
+    .header-right {
+        flex-shrink: 0;
+    }
+
+    .header-signin-btn {
+        padding: 8px 12px;
+        gap: 4px;
+    }
+
+    .header-signin-btn span {
+        font-size: 13px;
+        font-weight: 700;
     }
 }
 
