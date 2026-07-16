@@ -1,0 +1,109 @@
+/* Site helper styles and brand variables */
+:root {
+    --ofsg-maroon: #7B1F3A;
+    --ofsg-green: #007A3D;
+    --ofsg-dark: #07294D;
+    --ofsg-muted: #6B7280;
+    --ofsg-gold: #F2C94C;
+    --card-shadow: 0 8px 18px rgba(7, 41, 77, 0.08);
+}
+
+.password-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.password-toggle {
+    position: absolute;
+    right: 0.75rem;
+    top: 50%;
+    transform: translateY(-50%);
+    background: transparent;
+    border: none;
+    color: #475569;
+    cursor: pointer;
+    font-size: 1rem;
+    padding: 0.15rem;
+}
+
+.password-wrapper input {
+    padding-right: 2.75rem;
+}
+
+.brand-hero {
+    background: linear-gradient(90deg, var(--ofsg-maroon), var(--ofsg-green));
+    color: #fff;
+}
+
+.nav-dark {
+    background: var(--ofsg-dark);
+}
+
+
+.brand-btn {
+    background: var(--ofsg-maroon);
+    color: #fff;
+    padding: .6rem .9rem;
+    border-radius: .5rem;
+    box-shadow: 0 6px 14px rgba(139, 30, 63, 0.12);
+    transition: transform .08s ease, box-shadow .12s ease;
+}
+
+.brand-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(139, 30, 63, 0.14);
+}
+
+.btn-green {
+    background: var(--ofsg-green);
+    color: #fff;
+    padding: .5rem .9rem;
+    border-radius: .5rem;
+}
+
+.btn-maroon {
+    background: var(--ofsg-maroon);
+    color: #fff;
+    padding: .5rem .9rem;
+    border-radius: .5rem;
+}
+
+.btn-navy {
+    background: var(--ofsg-dark);
+    color: #fff;
+    padding: .5rem .9rem;
+    border-radius: .5rem;
+}
+
+.card {
+    background: #fff;
+    border-radius: 1rem;
+    box-shadow: var(--card-shadow);
+}
+
+.accent-left-green {
+    border-left: 6px solid var(--ofsg-green);
+}
+
+.accent-left-maroon {
+    border-left: 6px solid var(--ofsg-maroon);
+}
+
+.accent-left-navy {
+    border-left: 6px solid var(--ofsg-dark);
+}
+
+.text-accent-green {
+    color: var(--ofsg-green);
+}
+
+.text-accent-maroon {
+    color: var(--ofsg-maroon);
+}
+
+.text-accent-navy {
+    color: var(--ofsg-dark);
+}
+
+/* Small accessibility helpers left intentionally minimal. */
